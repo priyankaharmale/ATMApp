@@ -37,6 +37,8 @@ public class AppConstant {
     /*=================================================Forgot Password User=========================================================*/
     public static final String API_FORGOTPWD_USER = BASE_URL + "forgotpassword";
 
+    /*=================================================get profile=========================================================*/
+    public static final String API_GET_PROFILE = BASE_URL + "get_profile";
     /*=================================================update profile=========================================================*/
     public static final String API_UPDATE_PROFILE = BASE_URL + "update_profile";
 

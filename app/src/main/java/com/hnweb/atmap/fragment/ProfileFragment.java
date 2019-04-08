@@ -129,6 +129,8 @@ public class ProfileFragment extends Fragment {
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
+
+
         try {
             locationAutocompleteFragment = ( SupportPlaceAutocompleteFragment )
                     getChildFragmentManager()
@@ -199,7 +201,7 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
-
+        getUserDetails();
         return view;
     }
 
@@ -479,6 +481,7 @@ public class ProfileFragment extends Fragment {
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
 
+                                                getUserDetails();
                                                /* try {
                                                     JSONArray jsonArray = j.getJSONArray("details");
 
@@ -615,6 +618,129 @@ public class ProfileFragment extends Fragment {
         queue.add(strRequest);
     }
 
+
+    private void getUserDetails() {
+
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = AppConstant.API_GET_PROFILE;
+
+        StringRequest strRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.e("responseprofile", response);
+                        try {
+
+                            JSONObject json = new JSONObject(response);
+
+                            String message = json.getString("message");
+                            int msg = json.getInt("message_code");
+
+                            if (msg == 1) {
+                                loadingDialog.dismiss();
+
+                                JSONObject jsonObject = json.getJSONObject("detail");
+
+                                String userPic_url = jsonObject.getString("customer_profile_pic");
+                                String email = jsonObject.getString("customer_email");
+                                String customer_mobile = jsonObject.getString("customer_mobile");
+                                String customer_address = jsonObject.getString("customer_address");
+                                String customer_name = jsonObject.getString("customer_name");
+
+                                et_email.setText(email);
+                                et_mobilno.setText(customer_mobile);
+                                locationAutocompleteFragment.setText(customer_address);
+                                et_fullname.setText(customer_name);
+
+                                if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null") || userPic_url.equals("http://tech599.com/tech599.com/johnaks/FirstFruit/")) {
+                                    Glide.with(getActivity())
+                                            .load(R.drawable.image_marie)
+                                            .into(iv_profilePic);
+                                } else {
+                                    Glide.with(getActivity())
+                                            .load(userPic_url)
+                                            //  .placeholder(R.mipmap.img_no_navigation)
+                                            .listener(new RequestListener<String, GlideDrawable>() {
+                                                @Override
+                                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                                    return false;
+                                                }
+
+                                                @Override
+                                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                                    return false;
+                                                }
+                                            })
+                                            .into(iv_profilePic);
+
+
+                                    //  picUserDetails_iv  = (ImageView) findViewById(R.id.picUserDetails_iv);
+                                }
+                            } else {
+                                loadingDialog.dismiss();
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        errorMessage = "Request timeout";
+                    } else if (error.getClass().equals(NoConnectionError.class)) {
+                        errorMessage = "Failed to connect server";
+                    }
+
+                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                    loadingDialog.dismiss();
+                } else {
+                    String result = new String(networkResponse.data);
+                    try {
+                        JSONObject response = new JSONObject(result);
+                        String status = response.getString("status");
+                        String message = response.getString("message");
+
+                        Log.e("Error Status", status);
+                        Log.e("Error Message", message);
+
+                        if (networkResponse.statusCode == 404) {
+                            errorMessage = "Resource not found";
+                        } else if (networkResponse.statusCode == 401) {
+                            errorMessage = message + " Please login again";
+                        } else if (networkResponse.statusCode == 400) {
+                            errorMessage = message + " Check your inputs";
+                        } else if (networkResponse.statusCode == 500) {
+                            errorMessage = message + " Something is getting wrong";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
+
+                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("id", user_id);
+                return params;
+            }
+        };
+
+        queue.add(strRequest);
+    }
 
     @SuppressLint("LongLogTag")
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
