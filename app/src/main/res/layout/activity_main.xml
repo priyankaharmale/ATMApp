@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_screen"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/splash_logo"
+        android:text="Hello World!" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/dimens_10dp">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/text_20"
+            android:layout_toLeftOf="@+id/tv_appanme"
+            android:background="@color/colorWhite"></View>
+
+        <TextView
+            android:id="@+id/tv_appanme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/str_atm"
+            android:textColor="@color/colorWhite" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginRight="@dimen/text_20"
+
+            android:layout_toRightOf="@+id/tv_appanme"
+            android:background="@color/colorWhite"></View>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:text="@string/str_virtul"
+        android:textColor="@color/colorWhite" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/dimens_60dp"
+        android:layout_marginRight="@dimen/dimens_60dp"
+        android:layout_marginTop="@dimen/dimens_30dp"
+        android:background="@drawable/terms_conditions_button_bg"
+        android:text="@string/str_terms"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="@dimen/dimens_20dp"
+        android:text="@string/str_proceed"
+        android:textColor="@color/colorWhite" />
+
+    <Button
+        android:id="@+id/btn_proced"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/dimens_50dp"
+        android:layout_marginRight="@dimen/dimens_50dp"
+        android:layout_marginTop="@dimen/dimens_30dp"
+        android:background="@drawable/proceed_button_bg"
+        android:text="@string/str_proce"
+        android:textColor="@color/colorWhite" />
+
+</LinearLayout>
