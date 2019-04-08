@@ -138,6 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:hint="Email"
+                android:focusableInTouchMode="false"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/coloBlack"
                 android:textColorHint="@color/colorGray"
@@ -156,8 +157,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:hint="************"
-                android:inputType="number"
+                android:hint=""
+                android:inputType="text"
                 android:textColor="@color/coloBlack"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_size_16sp" />

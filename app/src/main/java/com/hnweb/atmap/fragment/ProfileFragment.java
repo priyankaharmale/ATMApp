@@ -114,6 +114,8 @@ public class ProfileFragment extends Fragment {
         et_closetime = view.findViewById(R.id.et_closetime);
         et_fullname = view.findViewById(R.id.et_fullname);
         et_mobilno = view.findViewById(R.id.et_mobilno);
+        et_email = view.findViewById(R.id.et_email);
+
         et_bankname = view.findViewById(R.id.et_bankname);
         et_accountNo = view.findViewById(R.id.et_accountNo);
         et_ssn = view.findViewById(R.id.et_ssn);
