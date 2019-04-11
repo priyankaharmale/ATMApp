@@ -397,7 +397,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
                 // postTokenRemoved();
 
 
-                Intent in = new Intent(AgentHomeActivity.this, LoginActivity.class);
+                Intent in = new Intent(AgentHomeActivity.this, ChooseUserActivity.class);
                 in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(in);
                 finish();

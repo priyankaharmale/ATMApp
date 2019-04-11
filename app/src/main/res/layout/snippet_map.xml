@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:layout_width="wrap_content"
+    app:layout_constraintCircleRadius="@dimen/dimens_50dp"
+    app:cardCornerRadius="@dimen/dimens_50dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/hotel_new_york_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_hotelname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:text="Hotel Name"
+        android:textColor="@color/coloBlack"
+        android:textSize="@dimen/text_size_18sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/iv_cancle"
+        android:layout_margin="@dimen/dimens_10dp"
+        android:src="@drawable/cancel_icon"
+        tools:ignore="RtlCompat" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_hotelname"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/dimens_100dp"
+            android:id="@+id/iv_profile"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimens_10dp"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:layout_weight="0.2"
+            android:src="@drawable/ten_usd" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_20dp"
+android:id="@+id/tv_hotelNamefull"
+                android:text="Grand Hotel"
+                android:textColor="@color/coloBlack"
+                android:textSize="@dimen/text_size_18sp"
+                android:textStyle="bold" />
+
+            <RatingBar
+                style="?android:attr/ratingBarStyleSmall"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="@dimen/dimens_10dp"
+                android:numStars="5"
+                android:rating="3"
+                android:stepSize="0.5" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_10dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:src="@drawable/map_icon" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_10dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:text="1 hr 25 min"
+                    android:textColor="@color/coloBlack"
+                    android:textSize="@dimen/text_size_12sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_10dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:src="@drawable/time_icon" />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimens_10dp"
+        android:id="@+id/tv_opentime"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:text="9:00 am "
+        android:textColor="@color/coloBlack"
+        android:textSize="@dimen/text_size_12sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimens_10dp"
+        android:id="@+id/tv_to"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:text="To"
+        android:textColor="@color/coloBlack"
+        android:textSize="@dimen/text_size_12sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimens_10dp"
+        android:id="@+id/tv_closetime"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:text="10:00 pm"
+        android:textColor="@color/coloBlack"
+        android:textSize="@dimen/text_size_12sp" />
+</LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimens_20dp"
+            android:layout_marginLeft="@dimen/dimens_30dp"
+            android:background="@drawable/get_direction_button_bg"
+            android:text="Get Direction" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimens_20dp"
+            android:layout_marginLeft="@dimen/dimens_20dp"
+            android:layout_marginRight="@dimen/dimens_30dp"
+            android:background="@drawable/withdraw_money_button"
+            android:text="Withdraw Money"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+</RelativeLayout>
+</android.support.v7.widget.CardView>

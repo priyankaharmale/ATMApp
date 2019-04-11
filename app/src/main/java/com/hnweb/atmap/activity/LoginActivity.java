@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     } else {
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                        builder.setMessage("Agent Login Successfully")
+                                        builder.setMessage("ATM Login Successfully")
                                                 .setCancelable(false)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {

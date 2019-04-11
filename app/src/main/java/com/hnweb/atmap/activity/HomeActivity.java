@@ -38,6 +38,7 @@ import com.hnweb.atmap.R;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.fragment.HomeFragment;
 import com.hnweb.atmap.fragment.MapFragment;
+import com.hnweb.atmap.fragment.MapViewFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
@@ -183,7 +184,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (savedInstanceState == null) {
 
             Fragment fragment = null;
-            fragment = new MapFragment();
+            fragment = new MapViewFragment();
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.addToBackStack(null);

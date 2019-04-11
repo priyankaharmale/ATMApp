@@ -42,6 +42,9 @@ public class AppConstant {
     /*=================================================update profile=========================================================*/
     public static final String API_UPDATE_PROFILE = BASE_URL + "update_profile";
 
+    /*=================================================GET AGENT LIST=========================================================*/
+    public static final String API_GET_AGENTLIST= BASE_URL + "cust_dashboard";
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);
