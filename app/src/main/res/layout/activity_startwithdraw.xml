@@ -2,9 +2,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorNavi"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
 
-    <LinearLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:padding="@dimen/dimens_5dp"
+                android:id="@+id/iv_back"
+                android:src="@drawable/arrow_icon"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_16sp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:padding="@dimen/dimens_5dp"
+                android:src="@drawable/dashboard_logo"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_16sp" />
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_150dp"
         android:background="@color/colorblue"
@@ -16,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimens_10dp"
             android:layout_marginTop="@dimen/dimens_20dp"
+            android:id="@+id/iv_dollor"
             android:layout_weight="0.2"
             android:src="@drawable/ten_usd" />
 
@@ -133,7 +186,7 @@
         android:layout_height="@dimen/dimens_100dp"
         android:layout_marginLeft="@dimen/dimens_10dp"
         android:layout_marginTop="@dimen/dimens_20dp"
-
+android:id="@+id/iv_barcode"
         android:src="@drawable/ten_usd" />
 
     <Button
@@ -151,5 +204,6 @@
         android:layout_marginTop="@dimen/dimens_20dp"
         android:src="@drawable/create_account_img" />
 
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.hnweb.atmap.fragment;
+package com.hnweb.atmap.agent.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -648,7 +648,19 @@ public class ProfileFragment extends Fragment {
                                 String customer_mobile = jsonObject.getString("customer_mobile");
                                 String customer_address = jsonObject.getString("customer_address");
                                 String customer_name = jsonObject.getString("customer_name");
+                                String customer_bank_name = jsonObject.getString("customer_bank_name");
+                                String customer_acc_num = jsonObject.getString("customer_acc_num");
+                                String customer_ssn = jsonObject.getString("customer_ssn");
+                                String router_number = jsonObject.getString("router_number");
+                                String business_name = jsonObject.getString("business_name");
 
+
+
+                                et_bankname.setText(customer_bank_name);
+                                et_accountNo.setText(customer_acc_num);
+                                et_ssn.setText(customer_ssn);
+                                et_routerNo.setText(router_number);
+                                et_businessnmae.setText(business_name);
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
                                 locationAutocompleteFragment.setText(customer_address);
@@ -693,38 +705,7 @@ public class ProfileFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
                 String errorMessage = "Unknown error";
-                if (networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        errorMessage = "Request timeout";
-                    } else if (error.getClass().equals(NoConnectionError.class)) {
-                        errorMessage = "Failed to connect server";
-                    }
 
-                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                    loadingDialog.dismiss();
-                } else {
-                    String result = new String(networkResponse.data);
-                    try {
-                        JSONObject response = new JSONObject(result);
-                        String status = response.getString("status");
-                        String message = response.getString("message");
-
-                        Log.e("Error Status", status);
-                        Log.e("Error Message", message);
-
-                        if (networkResponse.statusCode == 404) {
-                            errorMessage = "Resource not found";
-                        } else if (networkResponse.statusCode == 401) {
-                            errorMessage = message + " Please login again";
-                        } else if (networkResponse.statusCode == 400) {
-                            errorMessage = message + " Check your inputs";
-                        } else if (networkResponse.statusCode == 500) {
-                            errorMessage = message + " Something is getting wrong";
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
                 Log.i("Error", errorMessage);
                 error.printStackTrace();
 

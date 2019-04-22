@@ -7,8 +7,8 @@
     android:focusable="true">
 
     <ImageView
-        android:layout_width="@dimen/dimens_40dp"
-        android:layout_height="@dimen/dimens_40dp"
+        android:layout_width="@dimen/dimens_30dp"
+        android:layout_height="@dimen/dimens_30dp"
         android:layout_gravity="center"
         android:src="@drawable/notification_icon"
         android:tint="@color/colorGray" />

@@ -1,4 +1,4 @@
-package com.hnweb.atmap.fragment;
+package com.hnweb.atmap.user.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,8 +25,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,12 +59,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.bo.Agent;
+import com.hnweb.atmap.agent.activity.AgentDetailsActivity;
+import com.hnweb.atmap.agent.bo.Agent;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.LocationSet;
+import com.hnweb.atmap.utils.MapWrapperLayout;
 import com.hnweb.atmap.utils.MyLocationListener;
+import com.hnweb.atmap.utils.OnInfoWindowElemTouchListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -104,6 +108,14 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
     String strAdd = "";
     FragmentManager fragmentManager;
     List<Marker> markers;
+    private OnInfoWindowElemTouchListener infoButtonListener;
+    Agent infoWindowData;
+    private ViewGroup infoWindow;
+    private TextView infoTitle;
+    private TextView infoSnippet;
+    private Button infoButton1, infoButton2;
+    MapWrapperLayout mapWrapperLayout;
+    private ImageView iv_cancle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,6 +140,7 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
         fragmentManager = getFragmentManager();
         getCurrentLocation = "0";
 
+        mapWrapperLayout = ( MapWrapperLayout ) view.findViewById(R.id.map_relative_layout);
 
         loadingDialog = new LoadingDialog(getActivity());
 
@@ -313,9 +326,9 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
                                 try {
                                     for (int k = 0; k < jsonArrayRow.length(); k++) {
                                         Agent agent = new Agent();
-
                                         JSONObject jsonObjectpostion = jsonArrayRow.getJSONObject(k);
                                         agent.setCustomer_lat(jsonObjectpostion.getString("customer_lat"));
+                                        agent.setCustomer_id(jsonObjectpostion.getString("customer_id"));
                                         agent.setCustomer_long(jsonObjectpostion.getString("customer_long"));
                                         agent.setBusiness_name(jsonObjectpostion.getString("business_name"));
                                         agent.setOpen_time(jsonObjectpostion.getString("open_time"));
@@ -447,22 +460,32 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
                 markers = new ArrayList<Marker>();
                 for (int i = 0; i < agentArrayList.size(); i++) {
 
-                    Double latitude = Double.valueOf(agentArrayList.get(i).getCustomer_lat());
-                    Double longitude = Double.valueOf(agentArrayList.get(i).getCustomer_long());
+                    if(agentArrayList.get(i).getCustomer_lat().equalsIgnoreCase("") || agentArrayList.get(i).getCustomer_lat()==null
+                            || agentArrayList.get(i).getCustomer_lat().equalsIgnoreCase("null"))
+                    {
 
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.map_icon);
-                    LatLng lati_long_position = new LatLng(latitude, longitude);
+                    }else
+                    {
+                        Double latitude = Double.valueOf(agentArrayList.get(i).getCustomer_lat());
+                        Double longitude = Double.valueOf(agentArrayList.get(i).getCustomer_long());
 
-                    Marker marker = googleMap.addMarker(new MarkerOptions().title(agentArrayList.get(i).getBusiness_name())
-                            .position(lati_long_position)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_icon))
-                    );
+                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.location_icon);
+                        LatLng lati_long_position = new LatLng(latitude, longitude);
 
-                    markers.add(marker);
-                    googleMap.addMarker(new MarkerOptions().position(lati_long_position).title(agentArrayList.get(i).getBusiness_name())).setIcon(icon);
+                        Marker marker = googleMap.addMarker(new MarkerOptions()
+                                .position(lati_long_position)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_icon))
+                        );
+
+
+                        markers.add(marker);
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(lati_long_position).zoom(100).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+
+                    //  googleMap.addMarker(new MarkerOptions().position(lati_long_position).title(agentArrayList.get(i).getBusiness_name())).setIcon(icon);
                     // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(lati_long_position).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                 }
 
 
@@ -568,92 +591,122 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
         // Toast.makeText(MapsActivity.this,"Hiii",Toast.LENGTH_SHORT).show();
         System.out.println("markers.size" + markers.size());
 
-        if (flag == false) {
+
+        mapWrapperLayout.init(googleMap, getPixelsFromDp(getActivity(), 39 + 20));
+        // We want to reuse the info window for all the markers,
+        // so let's create only one class member instance
+        this.infoWindow = ( ViewGroup ) getLayoutInflater().inflate(R.layout.snippet_map, null);
+
+        this.infoTitle = ( TextView ) infoWindow.findViewById(R.id.tv_hotelNamefull);
+        final TextView tv_churchname = infoWindow.findViewById(R.id.tv_hotelname);
+        final TextView tv_opentime = infoWindow.findViewById(R.id.tv_opentime);
+        final ImageView iv_profile = infoWindow.findViewById(R.id.iv_profile);
+        final TextView tv_hotelNamefull = infoWindow.findViewById(R.id.tv_hotelNamefull);
+        this.iv_cancle = infoWindow.findViewById(R.id.iv_cancle);
+        final TextView tv_closetime = infoWindow.findViewById(R.id.tv_closetime);
+
+        //    this.infoSnippet = (TextView)infoWindow.findViewById(R.id.addressTxt);
+        this.infoButton1 = ( Button ) infoWindow.findViewById(R.id.btn_getdirection);
+        this.infoButton2 = ( Button ) infoWindow.findViewById(R.id.btn_widraw);
+
+        // Setting custom OnTouchListener which deals with the pressed state
+        // so it shows up
+        this.iv_cancle.setOnTouchListener(infoButtonListener);
+
+        this.infoButtonListener = new OnInfoWindowElemTouchListener(iv_cancle, getResources().getDrawable(R.drawable.cancel_icon), getResources().getDrawable(R.drawable.cancel_icon)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                // Here we can perform some action triggered after clicking the button
+                infoWindow.setVisibility(View.GONE);
+
+                Toast.makeText(getActivity(), "close", Toast.LENGTH_SHORT).show();
+            }
+        };
 
 
-            if (marker.getTitle().equals("Current Location")) {
-                Toast.makeText(getActivity(), "Current Location", Toast.LENGTH_SHORT).show();
-            } else {
-
-                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                    // Use default InfoWindow frame
-                    @Override
-                    public View getInfoWindow(Marker marker) {
-                        return null;
-                    }
-
-                    // Defines the contents of the InfoWindow
-                    @Override
-                    public View getInfoContents(Marker marker) {
-
-                        // Getting view from the layout file info_window_layout
-                        View view = getLayoutInflater().inflate(R.layout.snippet_map, null);
-                        view.setLayoutParams(new LinearLayout.LayoutParams(700, 500));
-                        view.setBackgroundResource(R.drawable.hotel_new_york_bg);
-
-                        try {
-                            final Agent infoWindowData = agentArrayList.get(markers.indexOf(marker));
-                            TextView tv_churchname = view.findViewById(R.id.tv_hotelname);
-                            TextView tv_opentime = view.findViewById(R.id.tv_opentime);
-                            ImageView iv_profile = view.findViewById(R.id.iv_profile);
-                            TextView tv_hotelNamefull=view.findViewById(R.id.tv_hotelNamefull);
-                            ImageView iv_cancle = view.findViewById(R.id.iv_cancle);
-                            TextView tv_closetime= view.findViewById(R.id.tv_closetime);
-                            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                                public void onInfoWindowClick(Marker marker) {
-
-                                }
-                            });
-                            iv_cancle.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-
-                                }
-                            });
-
-                            try {
-                                Glide.with(getActivity())
-                                        .load(infoWindowData.getCustomer_profile_pic())
-                                        .centerCrop()
-                                        .crossFade()
-                                        .listener(new RequestListener<String, GlideDrawable>() {
-                                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                                return false;
-                                            }
-
-                                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                                return false;
-                                            }
-                                        })
-                                        .into(iv_profile);
-                            } catch (Exception e) {
-                                Log.e("Exception", e.getMessage());
-                            }
-                            tv_churchname.setText(infoWindowData.getBusiness_name());
-                            tv_opentime.setText(infoWindowData.getOpen_time());
-                            tv_hotelNamefull.setText(infoWindowData.getBusiness_name());
-                            tv_closetime.setText(infoWindowData.getClose_time());
-
-
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            Log.e("Exception", e.getMessage());
-
-                        }
-
-
-                        return view;
-                    }
-
-                });
-
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
             }
 
+            @Override
+            public View getInfoContents(Marker marker) {
+                // Setting up the infoWindow with current's marker info
 
-        } else {
-            Log.i("Marker", "Hidden");
+                try {
+                    infoWindowData = agentArrayList.get(markers.indexOf(marker));
 
-        }
+
+                    try {
+                        Glide.with(getActivity())
+                                .load(infoWindowData.getCustomer_profile_pic())
+                                .centerCrop()
+                                .crossFade()
+                                .listener(new RequestListener<String, GlideDrawable>() {
+                                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                        return false;
+                                    }
+
+                                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                        return false;
+                                    }
+                                })
+                                .into(iv_profile);
+                    } catch (Exception e) {
+                        Log.e("Exception", e.getMessage());
+                    }
+                    tv_churchname.setText(infoWindowData.getBusiness_name());
+                    tv_opentime.setText(infoWindowData.getOpen_time());
+                    tv_hotelNamefull.setText(infoWindowData.getBusiness_name());
+                    tv_closetime.setText(infoWindowData.getClose_time());
+
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Log.e("Exception", e.getMessage());
+
+                }
+
+                infoButtonListener.setMarker(marker);
+
+                // We must call this to set the current marker and infoWindow references
+                // to the MapWrapperLayout
+                mapWrapperLayout.setMarkerWithInfoWindow(marker, infoWindow);
+                return infoWindow;
+            }
+        });
+
+        infoButtonListener = new OnInfoWindowElemTouchListener(infoButton2, getResources().getDrawable(R.drawable.withdraw_money_button), getResources().getDrawable(R.drawable.withdraw_money_button)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Intent intent = new Intent(getActivity(), AgentDetailsActivity.class);
+                intent.putExtra("agentId", infoWindowData.getCustomer_id());
+                startActivity(intent);
+            }
+        };
+        infoButton2.setOnTouchListener(infoButtonListener);
+
+
+        this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton1, getResources().getDrawable(R.drawable.get_direction_button_bg), getResources().getDrawable(R.drawable.get_direction_button_bg)) {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://ditu.google.cn/maps?f=d&source=s_d" +
+                                "&saddr=" + "&daddr=" + marker.getPosition().latitude + " " + marker.getPosition().longitude + "&hl=zh&t=m&dirflg=d"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);
+
+
+                       /* String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)",  marker.getPosition().latitude, marker.getPosition().longitude, "Where the party is at");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        intent.setPackage("com.google.android.apps.maps");
+                        startActivity(intent);*/
+            }
+        };
+
+        this.infoButton1.setOnTouchListener(infoButtonListener);
+
 
         return true;
     }
@@ -681,7 +734,15 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
 
+        googleMap.getUiSettings().setMapToolbarEnabled(true);
+
 
     }
+
+    public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return ( int ) (dp * scale + 0.5f);
+    }
+
 
 }

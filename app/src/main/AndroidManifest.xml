@@ -29,16 +29,23 @@
             android:name=".activity.ChooseUserActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
+            android:name=".agent.activity.AgentDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".agent.activity.AgentBarcodeScanActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
             android:name=".activity.RegistrationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".user.activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.AgentHomeActivity"
+            android:name=".agent.activity.AgentHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:visibility="gone"
         app:srcCompat="@drawable/cancel_icon" />
 
     <RelativeLayout
@@ -31,8 +32,8 @@
             android:layout_width="90dp"
             android:layout_height="@dimen/dimens_90dp"
             android:layout_gravity="center"
-            android:src="@drawable/image_marie"
-            />
+            android:src="@drawable/image_marie" />
+
         <LinearLayout
             android:id="@+id/view_progress_bar"
             android:layout_width="@dimen/dimens_100dp"
@@ -46,8 +47,9 @@
                 android:layout_height="@dimen/dimens_50dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/profile_image_photoupload"
             android:layout_width="40dp"
@@ -58,7 +60,7 @@
             android:layout_marginLeft="@dimen/dimens_75dp"
             android:layout_marginTop="@dimen/dimens_20dp"
             android:src="@drawable/edit"
-           />
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -77,6 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:text="marie.obrien@gmail.com"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorWhite"

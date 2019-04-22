@@ -1,4 +1,4 @@
-package com.hnweb.atmap.fragment;
+package com.hnweb.atmap.agent.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.hnweb.atmap.activity;
+package com.hnweb.atmap.agent.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,7 +17,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -40,9 +39,9 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.contants.AppConstant;
-import com.hnweb.atmap.fragment.MapFragment;
-import com.hnweb.atmap.fragment.ProfileFragment;
+import com.hnweb.atmap.agent.fragment.ProfileFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
@@ -131,7 +130,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         imageViewClose = navHeader.findViewById(R.id.imageView_close);
         imageViewUpload = navHeader.findViewById(R.id.profile_image_photoupload);
 
-        imageViewUpload.setVisibility(View.VISIBLE);
+       // imageViewUpload.setVisibility(View.VISIBLE);
 
 
         textViewUserName.setText(user_name);

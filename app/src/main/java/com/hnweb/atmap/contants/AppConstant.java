@@ -45,6 +45,17 @@ public class AppConstant {
     /*=================================================GET AGENT LIST=========================================================*/
     public static final String API_GET_AGENTLIST= BASE_URL + "cust_dashboard";
 
+
+    /*=================================================GET AGENT DATA=========================================================*/
+    public static final String API_GET_AGENTDATA = BASE_URL + "get_agent_info";
+
+
+
+    /*=================================================START WITHDRAW=========================================================*/
+    public static final String API_START_WITHDRAW = BASE_URL + "withdraw_request";
+
+
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);

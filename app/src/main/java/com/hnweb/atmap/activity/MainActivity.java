@@ -16,7 +16,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.agent.activity.AgentHomeActivity;
 import com.hnweb.atmap.contants.AppConstant;
+import com.hnweb.atmap.user.activity.HomeActivity;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LocationSet;
 import com.hnweb.atmap.utils.MyLocationListener;

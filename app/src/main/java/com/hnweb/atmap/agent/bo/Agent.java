@@ -1,4 +1,4 @@
-package com.hnweb.atmap.bo;
+package com.hnweb.atmap.agent.bo;
 
 public class Agent {
 

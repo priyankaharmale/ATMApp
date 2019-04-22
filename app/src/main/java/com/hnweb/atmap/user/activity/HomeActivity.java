@@ -1,11 +1,10 @@
-package com.hnweb.atmap.activity;
+package com.hnweb.atmap.user.activity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,29 +25,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.contants.AppConstant;
-import com.hnweb.atmap.fragment.HomeFragment;
-import com.hnweb.atmap.fragment.MapFragment;
-import com.hnweb.atmap.fragment.MapViewFragment;
+import com.hnweb.atmap.user.fragment.MapViewFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
 import com.hnweb.atmap.utils.SharedPrefManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 /* * Created by Priyanka H on 1/04/2019.
  */
 
@@ -122,7 +106,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         imageViewClose = navHeader.findViewById(R.id.imageView_close);
         imageViewUpload = navHeader.findViewById(R.id.profile_image_photoupload);
 
-        imageViewUpload.setVisibility(View.VISIBLE);
+    //    imageViewUpload.setVisibility(View.VISIBLE);
 
 
         textViewUserName.setText(user_name);
@@ -365,7 +349,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-            fragment = new MapFragment();
+            fragment = new MapViewFragment();
         } else if (id == R.id.nav_logout) {
             showLogoutAlert();
         }
