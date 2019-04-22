@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -18,9 +19,10 @@ import com.hnweb.atmap.R;
 
 public class AgentBarcodeScanActivity extends AppCompatActivity {
     ImageView iv_barcode, iv_dollor;
-    String barcode;
+    String barcode, businessName, address;
     String image;
     Bitmap ImageBitmap;
+    TextView tv_hotelname, tv_address, tv_barcodeNo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,9 +31,20 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         Intent intent = getIntent();
         barcode = intent.getStringExtra("barcode");
         image = intent.getStringExtra("image");
+        address = intent.getStringExtra("address");
+        businessName = intent.getStringExtra("businessName");
+
         iv_barcode = findViewById(R.id.iv_barcode);
         iv_dollor = findViewById(R.id.iv_dollor);
+        tv_address = findViewById(R.id.tv_address);
+        tv_barcodeNo = findViewById(R.id.tv_barcodeNo);
+        tv_hotelname = findViewById(R.id.tv_hotelname);
         iv_dollor.setImageResource(Integer.parseInt(image));
+
+        tv_barcodeNo.setText(barcode);
+        tv_address.setText(address);
+        tv_hotelname.setText(businessName);
+
         generate(barcode, iv_barcode);
     }
 

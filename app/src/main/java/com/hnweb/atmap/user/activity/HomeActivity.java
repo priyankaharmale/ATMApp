@@ -29,6 +29,7 @@ import com.hnweb.atmap.R;
 import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.user.fragment.MapViewFragment;
+import com.hnweb.atmap.user.fragment.UserProfileFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
@@ -352,6 +353,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragment = new MapViewFragment();
         } else if (id == R.id.nav_logout) {
             showLogoutAlert();
+        }else if(id==R.id.nav_myprofile)
+        {
+            fragment = new UserProfileFragment();
         }
 
 

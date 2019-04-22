@@ -40,7 +40,7 @@ public class AppConstant {
     /*=================================================get profile=========================================================*/
     public static final String API_GET_PROFILE = BASE_URL + "get_profile";
     /*=================================================update profile=========================================================*/
-    public static final String API_UPDATE_PROFILE = BASE_URL + "update_profile";
+    public static final String API_UPDATE_PROFILE = BASE_URL + "update_profile_new";
 
     /*=================================================GET AGENT LIST=========================================================*/
     public static final String API_GET_AGENTLIST= BASE_URL + "cust_dashboard";
@@ -48,6 +48,11 @@ public class AppConstant {
 
     /*=================================================GET AGENT DATA=========================================================*/
     public static final String API_GET_AGENTDATA = BASE_URL + "get_agent_info";
+
+
+    /*=================================================GET AGENT PROFILE=========================================================*/
+    public static final String API_GET_AGENTPROFILE= BASE_URL + "get_profile";
+
 
 
 

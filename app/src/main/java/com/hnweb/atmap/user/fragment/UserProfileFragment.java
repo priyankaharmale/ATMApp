@@ -1,10 +1,10 @@
-package com.hnweb.atmap.agent.fragment;
+package com.hnweb.atmap.user.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,12 +19,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -52,18 +51,18 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.activity.LoginActivity;
+import com.hnweb.atmap.agent.adaptor.MonthAdaptor;
+import com.hnweb.atmap.agent.adaptor.YearAdaptor;
 import com.hnweb.atmap.contants.AppConstant;
+import com.hnweb.atmap.inteface.OnCallBack;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.Utils;
 import com.hnweb.atmap.utils.Validations;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,6 +70,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -81,29 +81,25 @@ import java.util.Map;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.content.Context.MODE_PRIVATE;
 
-public class ProfileFragment extends Fragment {
+public class UserProfileFragment extends Fragment implements OnCallBack, View.OnClickListener {
 
     String stringLatitude = "", stringLongitude = "";
     LatLng latLng;
     LoadingDialog loadingDialog;
-    TimePickerDialog timePickerDialog;
-    Calendar calendar;
-    int currentHour;
-    Button btn_update;
-    int currentMinute;
-    String amPm, str_dob;
 
+    Button btn_update;
+    private int mYear, mMonth, mDay;
     String strAdd = "";
     String camImage, imagePath12;
     ImageView iv_profilePic, iv_edit;
     public static File destination;
+    OnCallBack onCallBack;
     private int GALLERY = 1, CAMERA = 2;
-    private int mYear, mMonth, mDay;
     public static final int REQUEST_CAMERA = 5;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
     SharedPreferences prefs;
-    EditText et_fullname, et_dob, et_mobilno, et_email, et_bankname, et_accountNo, et_ssn, et_routerNo, et_businessnmae, et_opentime, et_closetime;
-    String fullname, mobilno, email, bankname, accountNo, ssn, routerNo, businessnmae, opentime, closetime;
+    EditText et_fullname, et_mobilno, et_email, et_cardNumber, et_cvv, et_expiryyear, et_expirymonth, et_dob;
+    String fullname, mobilno, email, str_dob;
     String user_id;
     SupportPlaceAutocompleteFragment locationAutocompleteFragment;
 
@@ -111,24 +107,27 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        et_opentime = view.findViewById(R.id.et_opentime);
-        et_closetime = view.findViewById(R.id.et_closetime);
+        View view = inflater.inflate(R.layout.fragment_userprofile, container, false);
+
         et_fullname = view.findViewById(R.id.et_fullname);
         et_mobilno = view.findViewById(R.id.et_mobilno);
         et_email = view.findViewById(R.id.et_email);
-
-        et_bankname = view.findViewById(R.id.et_bankname);
-        et_accountNo = view.findViewById(R.id.et_accountNo);
-        et_ssn = view.findViewById(R.id.et_ssn);
-        et_routerNo = view.findViewById(R.id.et_routerNo);
-        et_businessnmae = view.findViewById(R.id.et_businessnmae);
+        et_cardNumber = view.findViewById(R.id.et_cardNumber);
         iv_profilePic = view.findViewById(R.id.iv_profilePic);
         iv_edit = view.findViewById(R.id.profile_image_photoupload);
-        et_dob = view.findViewById(R.id.et_dob);
         btn_update = view.findViewById(R.id.btn_update);
+        et_cvv = view.findViewById(R.id.et_cvv);
+        et_expiryyear = view.findViewById(R.id.et_expiryyear);
+        et_dob = view.findViewById(R.id.et_dob);
+        et_expirymonth = view.findViewById(R.id.et_expirymonth);
 
+        onCallBack = this;
         loadingDialog = new LoadingDialog(getActivity());
+        et_expiryyear.setOnClickListener(this);
+        et_expirymonth.setOnClickListener(this);
+        iv_edit.setOnClickListener(this);
+        btn_update.setOnClickListener(this);
+        et_dob.setOnClickListener(this);
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
@@ -171,87 +170,47 @@ public class ProfileFragment extends Fragment {
             Log.v("exgfd", "" + ex.toString());
 
         }
-        et_opentime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getOpenTime();
-            }
-        });
-        et_closetime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getCloseTime();
-            }
-        });
-        iv_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPictureDialog();
-            }
-        });
 
-        btn_update.setOnClickListener(new View.OnClickListener() {
+
+         getUserDetails();
+
+        et_cardNumber.addTextChangedListener(new TextWatcher() {
+            private static final char space = ' ';
+            boolean isDelete = true;
+
             @Override
-            public void onClick(View view) {
-                if (checkValidation()) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                    if (Utils.isNetworkAvailable(getActivity())) {
-                        updateprofile();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (before == 0)
+                    isDelete = false;
+                else
+                    isDelete = true;
+            }
 
-                    } else {
-                        Utils.myToast1(getActivity());
-                    }
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                String source = editable.toString();
+                int length = source.length();
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(source);
+
+                if (length > 0 && length % 5 == 0) {
+                    if (isDelete)
+                        stringBuilder.deleteCharAt(length - 1);
+                    else
+                        stringBuilder.insert(length - 1, " ");
+
+                    et_cardNumber.setText(stringBuilder);
+                    et_cardNumber.setSelection(et_cardNumber.getText().length());
                 }
             }
         });
-        et_dob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDOBPicker();
-            }
-        });
-        getUserDetails();
         return view;
-    }
-
-    private void getOpenTime() {
-        calendar = Calendar.getInstance();
-        currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        currentMinute = calendar.get(Calendar.MINUTE);
-
-        timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                if (hourOfDay >= 12) {
-                    amPm = "PM";
-                } else {
-                    amPm = "AM";
-                }
-                et_opentime.setText(String.format("%02d:%02d", hourOfDay, minutes) + " " + amPm);
-            }
-        }, currentHour, currentMinute, false);
-
-        timePickerDialog.show();
-    }
-
-    private void getCloseTime() {
-        calendar = Calendar.getInstance();
-        currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        currentMinute = calendar.get(Calendar.MINUTE);
-
-        timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                if (hourOfDay >= 12) {
-                    amPm = "PM";
-                } else {
-                    amPm = "AM";
-                }
-                et_closetime.setText(String.format("%02d:%02d", hourOfDay, minutes) + " " + amPm);
-            }
-        }, currentHour, currentMinute, false);
-
-        timePickerDialog.show();
     }
 
     private void showPictureDialog() {
@@ -340,7 +299,7 @@ public class ProfileFragment extends Fragment {
 
 
     public void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
     }
 
@@ -449,19 +408,13 @@ public class ProfileFragment extends Fragment {
             ret = false;
         if (!Validations.hasText(et_dob, "Please Select Date of Birth"))
             ret = false;
-        if (!Validations.hasText(et_bankname, "Please Enter Bank Name"))
+        if (!Validations.hasText(et_cardNumber, "Please Enter Card Number"))
             ret = false;
-        if (!Validations.hasText(et_accountNo, "Please Enter Account Number"))
+        if (!Validations.hasText(et_expirymonth, "Please Select Expiry Month"))
             ret = false;
-        if (!Validations.hasText(et_ssn, "Please Enter Social Security Number"))
+        if (!Validations.hasText(et_expiryyear, "Please Select Expiry Year"))
             ret = false;
-        if (!Validations.hasText(et_routerNo, "Please Router Number"))
-            ret = false;
-        if (!Validations.hasText(et_businessnmae, "Please Enter Business Name"))
-            ret = false;
-        if (!Validations.hasText(et_opentime, "Please Select Open Time"))
-            ret = false;
-        if (!Validations.hasText(et_closetime, "Please Select Close Time"))
+        if (!Validations.hasText(et_cvv, "Please Enter CVV"))
             ret = false;
 
         return ret;
@@ -519,42 +472,8 @@ public class ProfileFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                NetworkResponse networkResponse = error.networkResponse;
                 String errorMessage = "Unknown error";
-                if (networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        errorMessage = "Request timeout";
-                    } else if (error.getClass().equals(NoConnectionError.class)) {
-                        errorMessage = "Failed to connect server";
-                    }
 
-                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-
-                    loadingDialog.dismiss();
-
-                } else {
-                    String result = new String(networkResponse.data);
-                    try {
-                        JSONObject response = new JSONObject(result);
-                        String status = response.getString("status");
-                        String message = response.getString("message");
-
-                        Log.e("Error Status", status);
-                        Log.e("Error Message", message);
-
-                        if (networkResponse.statusCode == 404) {
-                            errorMessage = "Resource not found";
-                        } else if (networkResponse.statusCode == 401) {
-                            errorMessage = message + " Please login again";
-                        } else if (networkResponse.statusCode == 400) {
-                            errorMessage = message + " Check your inputs";
-                        } else if (networkResponse.statusCode == 500) {
-                            errorMessage = message + " Something is getting wrong";
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
                 Log.i("Error", errorMessage);
                 error.printStackTrace();
 
@@ -565,19 +484,9 @@ public class ProfileFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> Stringparams = new HashMap<String, String>();
-
-
                 fullname = et_fullname.getText().toString();
-                bankname = et_bankname.getText().toString();
-                accountNo = et_accountNo.getText().toString();
-                routerNo = et_routerNo.getText().toString();
-                ssn = et_ssn.getText().toString();
                 email = et_email.getText().toString();
                 mobilno = et_mobilno.getText().toString();
-                businessnmae = et_businessnmae.getText().toString();
-                opentime = et_opentime.getText().toString();
-                closetime = et_closetime.getText().toString();
-
 
                 if (camImage == null || camImage.equalsIgnoreCase("")) {
                 } else {
@@ -587,20 +496,17 @@ public class ProfileFragment extends Fragment {
                 Stringparams.put("Content-Type", "application/json");
                 Stringparams.put("name", fullname);
                 Stringparams.put("address", strAdd);
-                Stringparams.put("dob",str_dob);
                 Stringparams.put("email", email);
-                Stringparams.put("bank_name", bankname);
-                Stringparams.put("bank_account_no", accountNo);
+                Stringparams.put("dob", str_dob);
                 Stringparams.put("cus_lat", stringLatitude);
                 Stringparams.put("cus_long", stringLongitude);
-                Stringparams.put("router_no", routerNo);
-                Stringparams.put("ssn_no", ssn);
                 Stringparams.put("mobile_no", mobilno);
-                Stringparams.put("business_name", businessnmae);
-                Stringparams.put("open_time", opentime);
-                Stringparams.put("close_time", closetime);
+                Stringparams.put("customer_type", "1");
+                Stringparams.put("cardnumber", et_cardNumber.getText().toString());
+                Stringparams.put("exp_month", et_expirymonth.getText().toString());
+                Stringparams.put("exp_year", et_expiryyear.getText().toString());
+                Stringparams.put("cvc", et_cvv.getText().toString());
                 Stringparams.put("id", user_id);
-                Stringparams.put("customer_type", "2");
                 Log.e("params", Stringparams.toString());
                 // System.out.println(params);
                 return Stringparams;
@@ -614,7 +520,7 @@ public class ProfileFragment extends Fragment {
 
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = AppConstant.API_GET_PROFILE;
+        String url = AppConstant.API_GET_AGENTPROFILE;
 
         StringRequest strRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -639,18 +545,13 @@ public class ProfileFragment extends Fragment {
                                 String customer_mobile = jsonObject.getString("customer_mobile");
                                 String customer_address = jsonObject.getString("customer_address");
                                 String customer_name = jsonObject.getString("customer_name");
-                                String customer_bank_name = jsonObject.getString("customer_bank_name");
+                              /*  String customer_bank_name = jsonObject.getString("customer_bank_name");
                                 String customer_acc_num = jsonObject.getString("customer_acc_num");
                                 String customer_ssn = jsonObject.getString("customer_ssn");
                                 String router_number = jsonObject.getString("router_number");
                                 String business_name = jsonObject.getString("business_name");
+*/
 
-
-                                et_bankname.setText(customer_bank_name);
-                                et_accountNo.setText(customer_acc_num);
-                                et_ssn.setText(customer_ssn);
-                                et_routerNo.setText(router_number);
-                                et_businessnmae.setText(business_name);
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
                                 locationAutocompleteFragment.setText(customer_address);
@@ -738,6 +639,92 @@ public class ProfileFragment extends Fragment {
         return strAdd;
     }
 
+    public void dialogYear() {
+        Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_month);
+        ListView lv = ( ListView ) dialog.findViewById(R.id.lv);
+        dialog.setCancelable(true);
+        dialog.setTitle("Year");
+        ArrayList<String> years = new ArrayList<String>();
+        int thisYear = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = thisYear; i <= 2060; i++) {
+            years.add(Integer.toString(i));
+        }
+        YearAdaptor adapter = new YearAdaptor(getActivity(), years, onCallBack, dialog);
+        lv.setAdapter(adapter);
+
+        dialog.show();
+    }
+
+    public void dialogMonth() {
+        Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_month);
+        ListView lv = ( ListView ) dialog.findViewById(R.id.lv);
+        dialog.setCancelable(true);
+        dialog.setTitle("Month");
+        ArrayList<String> years = new ArrayList<String>();
+        years.add("01");
+        years.add("02");
+        years.add("03");
+        years.add("04");
+        years.add("05");
+        years.add("06");
+        years.add("07");
+        years.add("08");
+        years.add("09");
+        years.add("10");
+        years.add("11");
+        years.add("12");
+        MonthAdaptor adapter = new MonthAdaptor(getActivity(), years, onCallBack, dialog);
+        lv.setAdapter(adapter);
+        dialog.show();
+    }
+
+    @Override
+    public void selctedImge(String amount, String image) {
+
+    }
+
+    @Override
+    public void callbackYear(String count) {
+        et_expiryyear.setText(count);
+    }
+
+    @Override
+    public void callbackMonthe(String month) {
+        et_expirymonth.setText(month);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.et_expiryyear:
+                dialogYear();
+                break;
+            case R.id.et_expirymonth:
+                dialogMonth();
+                break;
+            case R.id.profile_image_photoupload:
+                showPictureDialog();
+                break;
+            case R.id.btn_update:
+                if (checkValidation()) {
+                    if (Utils.isNetworkAvailable(getActivity())) {
+                        updateprofile();
+
+                    } else {
+                        Utils.myToast1(getActivity());
+                    }
+                }
+                break;
+            case R.id.et_dob:
+                getDOBPicker();
+        }
+
+    }
+
+
     private void getDOBPicker() {
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -763,7 +750,5 @@ public class ProfileFragment extends Fragment {
         // datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + 1000);
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
-
     }
-
 }

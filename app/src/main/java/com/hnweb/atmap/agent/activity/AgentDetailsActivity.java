@@ -46,10 +46,12 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     TextView tv_hotelName, tv_address, tv_opentime, tv_closetime;
     ImageView iv_back;
     Button btn_strtwithdraw;
+    TextView tv_barcodeNo;
     Toolbar toolbar;
     SharedPreferences prefs;
     String user_id, agentId;
     String stramount = "";
+    String address, businessName;
     String images;
     ArrayList personImages = new ArrayList<>(Arrays.asList(R.drawable.ten_usd, R.drawable.twenty_usd, R.drawable.forty_usd, R.drawable.sixty_usd, R.drawable.eighty_usd, R.drawable.hundred_usd, R.drawable.two_hundred_usd));
     ArrayList personNames = new ArrayList<>(Arrays.asList("10", "20", "40", "60", "80", "100", "200"));
@@ -127,13 +129,13 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
 
                                     String user_id = jsonObject.getString("customer_id");
                                     String user_name = jsonObject.getString("customer_name");
-                                    String address = jsonObject.getString("customer_address");
+                                    address = jsonObject.getString("customer_address");
                                     String user_email = jsonObject.getString("customer_email");
                                     String user_phone = jsonObject.getString("customer_mobile");
                                     String user_type = jsonObject.getString("user_type");
                                     String opentime = jsonObject.getString("open_time");
                                     String cloasetime = jsonObject.getString("close_time");
-                                    String businessName = jsonObject.getString("business_name");
+                                    businessName = jsonObject.getString("business_name");
 
                                     tv_hotelName.setText(businessName);
                                     tv_closetime.setText(cloasetime);
@@ -216,7 +218,9 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     String barcode = j.getString("detail");
                                     Intent intent = new Intent(AgentDetailsActivity.this, AgentBarcodeScanActivity.class);
                                     intent.putExtra("barcode", barcode);
-                                    intent.putExtra("image",images);
+                                    intent.putExtra("image", images);
+                                    intent.putExtra("businessName", businessName);
+                                    intent.putExtra("address", address);
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     System.out.println("jsonexeption" + e.toString());
@@ -276,6 +280,16 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     public void selctedImge(String amount, String image) {
         Toast.makeText(this, "Selected Amount " + amount + image, Toast.LENGTH_SHORT).show();
         stramount = amount;
-        images=image;
+        images = image;
+    }
+
+    @Override
+    public void callbackYear(String count) {
+
+    }
+
+    @Override
+    public void callbackMonthe(String month) {
+
     }
 }
