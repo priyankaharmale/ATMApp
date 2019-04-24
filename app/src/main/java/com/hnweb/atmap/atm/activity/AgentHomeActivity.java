@@ -1,4 +1,4 @@
-package com.hnweb.atmap.agent.activity;
+package com.hnweb.atmap.atm.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,6 +17,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -40,8 +41,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.activity.ChooseUserActivity;
+import com.hnweb.atmap.atm.fragment.RequestMoneyFragment;
 import com.hnweb.atmap.contants.AppConstant;
-import com.hnweb.atmap.agent.fragment.ProfileFragment;
+import com.hnweb.atmap.atm.fragment.ProfileFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
@@ -130,7 +132,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         imageViewClose = navHeader.findViewById(R.id.imageView_close);
         imageViewUpload = navHeader.findViewById(R.id.profile_image_photoupload);
 
-       // imageViewUpload.setVisibility(View.VISIBLE);
+        // imageViewUpload.setVisibility(View.VISIBLE);
 
 
         textViewUserName.setText(user_name);
@@ -179,19 +181,16 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             // Glide.with(getApplicationContext()).load(profile_image).into(imageViewProfile);
         }*/
 
-       /* if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             Fragment fragment = null;
-            fragment = new MapFragment();
+            fragment = new RequestMoneyFragment();
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.frame_layout, fragment);
             transaction.commit();
-            //toolbarmiddletext.setText("Home");
-            //getSupportActionBar().setTitle("Find Craves");
-            //drawerFragment.closeDrawer(GravityCompat.START);
-        }*/
+        }
         if (connectionDetector.isConnectingToInternet()) {
             //getNotificationCount();
         } else {
@@ -363,7 +362,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-            // fragment = new MapFragment();
+            fragment = new RequestMoneyFragment();
         } else if (id == R.id.nav_logout) {
             showLogoutAlert();
         } else if (id == R.id.nav_myprofile) {

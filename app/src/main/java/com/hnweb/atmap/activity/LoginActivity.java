@@ -25,7 +25,7 @@ import com.android.volley.toolbox.Volley;
 
 
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.agent.activity.AgentHomeActivity;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.user.activity.HomeActivity;
 import com.hnweb.atmap.utils.AlertUtility;
@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     if (user_type.equalsIgnoreCase("1")) {
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                        builder.setMessage("Customer Login Successfully")
+                                        builder.setMessage("User Login Successfully")
                                                 .setCancelable(false)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {

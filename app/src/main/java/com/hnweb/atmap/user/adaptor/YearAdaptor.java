@@ -1,4 +1,4 @@
-package com.hnweb.atmap.agent.adaptor;
+package com.hnweb.atmap.user.adaptor;
 
 import android.app.Dialog;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.hnweb.atmap.agent.activity;
+package com.hnweb.atmap.user.activity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -24,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.activity.MainActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.inteface.OnCallBack;
 import com.hnweb.atmap.user.adaptor.ImagesAdaptor;
@@ -215,12 +214,15 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                             if (message_code == 1) {
 
                                 try {
-                                    String barcode = j.getString("detail");
+                                    final JSONObject jsonObject = j.getJSONObject("detail");
+                                    String barcode = jsonObject.getString("barcode_no");
+                                    String request_id = jsonObject.getString("request_id");
                                     Intent intent = new Intent(AgentDetailsActivity.this, AgentBarcodeScanActivity.class);
                                     intent.putExtra("barcode", barcode);
                                     intent.putExtra("image", images);
                                     intent.putExtra("businessName", businessName);
                                     intent.putExtra("address", address);
+                                    intent.putExtra("request_id", request_id);
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     System.out.println("jsonexeption" + e.toString());

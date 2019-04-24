@@ -29,10 +29,16 @@
             android:name=".activity.ChooseUserActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".agent.activity.AgentDetailsActivity"
+            android:name=".user.activity.AgentDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".agent.activity.AgentBarcodeScanActivity"
+            android:name=".user.activity.AgentBarcodeScanActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+        android:name=".atm.activity.ScannedBarcodeActivity"
+        android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".atm.activity.RequestMoneyDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
@@ -45,7 +51,7 @@
             android:name=".user.activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".agent.activity.AgentHomeActivity"
+            android:name=".atm.activity.AgentHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

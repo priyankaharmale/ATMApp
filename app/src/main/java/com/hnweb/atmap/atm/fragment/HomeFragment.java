@@ -1,11 +1,9 @@
-package com.hnweb.atmap.agent.fragment;
+package com.hnweb.atmap.atm.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,9 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hnweb.atmap.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
 

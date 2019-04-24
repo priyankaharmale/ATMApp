@@ -157,7 +157,7 @@
                 android:layout_centerInParent="true"
                 android:hint="Dob"
                 android:focusableInTouchMode="false"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:textColor="@color/coloBlack"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_size_16sp" />

@@ -1,5 +1,7 @@
 package com.hnweb.atmap.contants;
 
+import android.graphics.Bitmap;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,7 +31,7 @@ public class AppConstant {
 
     public static final String BASE_URL = "http://tech599.com/tech599.com/johnsum/atmpro/api/index.php/api/";
 
-    /*******************************Customer***************************************************************************************************/
+    /*******************************User***************************************************************************************************/
     /*=================================================Register User=========================================================*/
     public static final String API_REGISTER_USER = BASE_URL + "register";
     /*=================================================Login User=========================================================*/
@@ -39,6 +41,7 @@ public class AppConstant {
 
     /*=================================================get profile=========================================================*/
     public static final String API_GET_PROFILE = BASE_URL + "get_profile";
+
     /*=================================================update profile=========================================================*/
     public static final String API_UPDATE_PROFILE = BASE_URL + "update_profile_new";
 
@@ -51,14 +54,20 @@ public class AppConstant {
 
 
     /*=================================================GET AGENT PROFILE=========================================================*/
-    public static final String API_GET_AGENTPROFILE= BASE_URL + "get_profile";
-
-
+    public static final String API_GET_AGENTPROFILE= BASE_URL + "get_agent_info";
 
 
     /*=================================================START WITHDRAW=========================================================*/
     public static final String API_START_WITHDRAW = BASE_URL + "withdraw_request";
 
+
+    /*=================================================CANCLE WITHDRAW=========================================================*/
+    public static final String API_CANCLE_WITHDRAW = BASE_URL + "cancel_request";
+
+
+    /*=================================================REQUESTMONEYLIST=========================================================*/
+    public static final String API_REQUESTMONEYLIST= BASE_URL + "request_money";
+    public static Bitmap barcodeBitmap;
 
 
     public static String dateToString(Date date, String format) {

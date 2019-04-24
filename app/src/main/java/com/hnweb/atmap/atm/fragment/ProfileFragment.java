@@ -1,10 +1,9 @@
-package com.hnweb.atmap.agent.fragment;
+package com.hnweb.atmap.atm.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,12 +18,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,10 +29,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -52,18 +48,15 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.activity.LoginActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.Utils;
 import com.hnweb.atmap.utils.Validations;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -470,11 +463,11 @@ public class ProfileFragment extends Fragment {
 
     private void updateprofile() {
         loadingDialog.show();
-
+        StringRequest stringRequest;
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         String url = AppConstant.API_UPDATE_PROFILE;
 
-        StringRequest strRequest = new StringRequest(Request.Method.POST, url,
+        stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String object) {
@@ -519,6 +512,7 @@ public class ProfileFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                System.out.println("VolleyError" + error.toString());
                 NetworkResponse networkResponse = error.networkResponse;
                 String errorMessage = "Unknown error";
                 if (networkResponse == null) {
@@ -587,7 +581,7 @@ public class ProfileFragment extends Fragment {
                 Stringparams.put("Content-Type", "application/json");
                 Stringparams.put("name", fullname);
                 Stringparams.put("address", strAdd);
-                Stringparams.put("dob",str_dob);
+                Stringparams.put("dob", str_dob);
                 Stringparams.put("email", email);
                 Stringparams.put("bank_name", bankname);
                 Stringparams.put("bank_account_no", accountNo);
@@ -606,21 +600,27 @@ public class ProfileFragment extends Fragment {
                 return Stringparams;
             }
         };
-        queue.add(strRequest);
+        queue.add(stringRequest);
+        int MY_SOCKET_TIMEOUT_MS=50000;
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
 
     private void getUserDetails() {
-
+loadingDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = AppConstant.API_GET_PROFILE;
+        String url = AppConstant.API_GET_AGENTPROFILE;
 
         StringRequest strRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
+
                     @Override
                     public void onResponse(String response) {
-
+                        loadingDialog.dismiss();
                         Log.e("responseprofile", response);
                         try {
 
@@ -644,7 +644,8 @@ public class ProfileFragment extends Fragment {
                                 String customer_ssn = jsonObject.getString("customer_ssn");
                                 String router_number = jsonObject.getString("router_number");
                                 String business_name = jsonObject.getString("business_name");
-
+                                String open_time = jsonObject.getString("open_time");
+                                String close_time = jsonObject.getString("close_time");
 
                                 et_bankname.setText(customer_bank_name);
                                 et_accountNo.setText(customer_acc_num);
@@ -655,6 +656,8 @@ public class ProfileFragment extends Fragment {
                                 et_mobilno.setText(customer_mobile);
                                 locationAutocompleteFragment.setText(customer_address);
                                 et_fullname.setText(customer_name);
+                                et_closetime.setText(close_time);
+                                et_opentime.setText(open_time);
 
                                 if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null") || userPic_url.equals("http://tech599.com/tech599.com/johnaks/FirstFruit/")) {
                                     Glide.with(getActivity())
@@ -705,7 +708,7 @@ public class ProfileFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("id", user_id);
+                params.put("agent_id", user_id);
                 return params;
             }
         };

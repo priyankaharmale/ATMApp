@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,15 +32,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
-import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -55,8 +51,8 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.agent.adaptor.MonthAdaptor;
-import com.hnweb.atmap.agent.adaptor.YearAdaptor;
+import com.hnweb.atmap.user.adaptor.MonthAdaptor;
+import com.hnweb.atmap.user.adaptor.YearAdaptor;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.inteface.OnCallBack;
 import com.hnweb.atmap.utils.LoadingDialog;
@@ -520,7 +516,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
 
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = AppConstant.API_GET_AGENTPROFILE;
+        String url = AppConstant.API_GET_PROFILE;
 
         StringRequest strRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
