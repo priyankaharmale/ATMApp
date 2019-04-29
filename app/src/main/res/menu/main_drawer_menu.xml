@@ -25,6 +25,16 @@
 
     </group>
     <group
+        android:id="@+id/bankaccount"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_bankaccount"
+            android:icon="@drawable/profile"
+
+            android:title="Bank Account" />
+
+    </group>
+    <group
         android:id="@+id/trashistory"
         android:checkableBehavior="single">
         <item

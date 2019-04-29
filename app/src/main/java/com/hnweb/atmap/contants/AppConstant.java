@@ -46,7 +46,7 @@ public class AppConstant {
     public static final String API_UPDATE_PROFILE = BASE_URL + "update_profile_new";
 
     /*=================================================GET AGENT LIST=========================================================*/
-    public static final String API_GET_AGENTLIST= BASE_URL + "cust_dashboard";
+    public static final String API_GET_AGENTLIST = BASE_URL + "cust_dashboard";
 
 
     /*=================================================GET AGENT DATA=========================================================*/
@@ -54,7 +54,7 @@ public class AppConstant {
 
 
     /*=================================================GET AGENT PROFILE=========================================================*/
-    public static final String API_GET_AGENTPROFILE= BASE_URL + "get_agent_info";
+    public static final String API_GET_AGENTPROFILE = BASE_URL + "get_agent_info";
 
 
     /*=================================================START WITHDRAW=========================================================*/
@@ -66,9 +66,19 @@ public class AppConstant {
 
 
     /*=================================================REQUESTMONEYLIST=========================================================*/
-    public static final String API_REQUESTMONEYLIST= BASE_URL + "request_money";
+    public static final String API_REQUESTMONEYLIST = BASE_URL + "request_money";
+
+    /*=================================================AGENT TRANSACTION HISTORY=========================================================*/
+    public static final String API_AGENT_TRANSACTION_HISTORY = BASE_URL + "agent_history";
+
     public static Bitmap barcodeBitmap;
 
+    /*=================================================SCAN BARCODE API =========================================================*/
+    public static final String API_SCANBARCODE = BASE_URL + "scan_api";
+
+
+    /*=================================================update profile=========================================================*/
+    public static final String API_ADDBANKACCOUNT = BASE_URL + "add_bank_details";
 
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);

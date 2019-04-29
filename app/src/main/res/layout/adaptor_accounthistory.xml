@@ -1,68 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimens_5dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimens_150dp"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_height="match_parent"
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimens_10dp"
-            android:layout_marginTop="@dimen/dimens_20dp"
-            android:layout_weight="0.2"
-            android:src="@drawable/ten_usd" />
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_100dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
-            <TextView
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="0dp"
+                android:id="@+id/iv_doller"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_10dp"
                 android:layout_marginTop="@dimen/dimens_20dp"
+                android:layout_weight="0.2"
+                android:src="@drawable/ten_usd" />
 
-                android:text="Grand Hotel"
-                android:textColor="@color/coloBlack"
-                android:textSize="@dimen/text_size_18sp"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_cardnumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_20dp"
+                    android:text="91*******76"
+                    android:textColor="@color/coloBlack"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:text="Jan 24 2019 "
+
+                        android:textColor="@color/coloBlack"
+                        android:textSize="@dimen/text_size_12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimens_10dp"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:text="Jan 24 2019 "
+
+                        android:textColor="@color/coloBlack"
+                        android:textSize="@dimen/text_size_12sp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_10dp"
-                android:text="Jan 24 2019 "
-                android:textColor="@color/coloBlack"
-                android:textSize="@dimen/text_size_12sp" />
+                android:layout_marginLeft="@dimen/dimens_10dp"
+                android:layout_marginTop="@dimen/dimens_30dp"
+                android:layout_weight="0.2"
+                android:text="Successful"
+                android:textColor="@android:color/holo_green_dark"
+                />
+
+            <ImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_30dp"
+                android:layout_weight="0.125"
+
+                android:src="@drawable/ic_chevron_right_black_24dp" />
 
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="0dp"
+        <com.hnweb.atmap.utils.ExpandableLinearLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimens_10dp"
-            android:layout_marginTop="@dimen/dimens_30dp"
-            android:layout_weight="0.2"
-            android:src="@drawable/favorite_icon"
-            android:text="Successful"
-            android:textColor="@android:color/holo_green_dark" />
+            android:orientation="vertical"
+            app:ael_duration="400"
+            app:ael_expanded="false">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_30dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_60dp"
+                android:layout_marginBottom="@dimen/dimens_10dp"
+                android:orientation="horizontal">
 
-            android:layout_weight="0.125"
-            android:src="@drawable/ic_chevron_right_black_24dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/image" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:id="@+id/tv_user_name"
+                    android:padding="@dimen/dimens_10dp"
+                    android:text="Mickel Jsckson"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </com.hnweb.atmap.utils.ExpandableLinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

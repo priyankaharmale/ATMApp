@@ -41,7 +41,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.activity.ChooseUserActivity;
+import com.hnweb.atmap.atm.fragment.HomeFragment;
 import com.hnweb.atmap.atm.fragment.RequestMoneyFragment;
+import com.hnweb.atmap.atm.fragment.TransactionHistoryFragment;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.atm.fragment.ProfileFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
@@ -368,8 +370,13 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_myprofile) {
             //   showLogoutAlert();
             fragment = new ProfileFragment();
+        } else if (id == R.id.nav_bankaccount) {
+            //   showLogoutAlert();
+            fragment = new HomeFragment();
+        } else if (id == R.id.nav_trashistory) {
+            //   showLogoutAlert();
+            fragment = new TransactionHistoryFragment();
         }
-
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();

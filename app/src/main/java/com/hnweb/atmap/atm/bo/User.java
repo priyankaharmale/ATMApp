@@ -1,8 +1,37 @@
 package com.hnweb.atmap.atm.bo;
 
 public class User {
-    String customer_name,customer_address,customer_lat,customer_long,request_user_id,request_amount
-            ,request_status,request_barcode,request_time;
+    String customer_name;
+    String customer_address;
+    String customer_lat;
+    String customer_long;
+    String request_user_id;
+    String request_amount;
+    String request_status;
+    String request_barcode;
+    String request_time;
+
+    public String getCustomer_profile_pic() {
+        return customer_profile_pic;
+    }
+
+    public void setCustomer_profile_pic(String customer_profile_pic) {
+        this.customer_profile_pic = customer_profile_pic;
+    }
+
+    String customer_profile_pic;
+
+
+
+    public String getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(String request_id) {
+        this.request_id = request_id;
+    }
+
+    String request_id;
 
     public String getCustomer_name() {
         return customer_name;

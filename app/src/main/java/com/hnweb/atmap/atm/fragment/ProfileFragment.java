@@ -51,6 +51,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.hnweb.atmap.MultipartRequest.MultiPart_Key_Value_Model;
+import com.hnweb.atmap.MultipartRequest.MultipartFileUploaderAsync;
+import com.hnweb.atmap.MultipartRequest.OnEventListener;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.LoadingDialog;
@@ -95,7 +98,7 @@ public class ProfileFragment extends Fragment {
     public static final int REQUEST_CAMERA = 5;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
     SharedPreferences prefs;
-    EditText et_fullname, et_dob, et_mobilno, et_email, et_bankname, et_accountNo, et_ssn, et_routerNo, et_businessnmae, et_opentime, et_closetime;
+    EditText et_fullname, et_mobilno, et_email, et_businessnmae, et_opentime, et_closetime;
     String fullname, mobilno, email, bankname, accountNo, ssn, routerNo, businessnmae, opentime, closetime;
     String user_id;
     SupportPlaceAutocompleteFragment locationAutocompleteFragment;
@@ -111,14 +114,9 @@ public class ProfileFragment extends Fragment {
         et_mobilno = view.findViewById(R.id.et_mobilno);
         et_email = view.findViewById(R.id.et_email);
 
-        et_bankname = view.findViewById(R.id.et_bankname);
-        et_accountNo = view.findViewById(R.id.et_accountNo);
-        et_ssn = view.findViewById(R.id.et_ssn);
-        et_routerNo = view.findViewById(R.id.et_routerNo);
         et_businessnmae = view.findViewById(R.id.et_businessnmae);
         iv_profilePic = view.findViewById(R.id.iv_profilePic);
         iv_edit = view.findViewById(R.id.profile_image_photoupload);
-        et_dob = view.findViewById(R.id.et_dob);
         btn_update = view.findViewById(R.id.btn_update);
 
         loadingDialog = new LoadingDialog(getActivity());
@@ -189,7 +187,7 @@ public class ProfileFragment extends Fragment {
                 if (checkValidation()) {
 
                     if (Utils.isNetworkAvailable(getActivity())) {
-                        updateprofile();
+                        updateUserData(camImage);
 
                     } else {
                         Utils.myToast1(getActivity());
@@ -197,12 +195,7 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
-        et_dob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDOBPicker();
-            }
-        });
+
         getUserDetails();
         return view;
     }
@@ -440,9 +433,9 @@ public class ProfileFragment extends Fragment {
             ret = false;
         if (!Validations.isEmailAddress(et_email, true, "Please Enter Valid Email ID"))
             ret = false;
-        if (!Validations.hasText(et_dob, "Please Select Date of Birth"))
+       /* if (!Validations.hasText(et_dob, "Please Select Date of Birth"))
             ret = false;
-        if (!Validations.hasText(et_bankname, "Please Enter Bank Name"))
+      */ /* if (!Validations.hasText(et_bankname, "Please Enter Bank Name"))
             ret = false;
         if (!Validations.hasText(et_accountNo, "Please Enter Account Number"))
             ret = false;
@@ -450,7 +443,7 @@ public class ProfileFragment extends Fragment {
             ret = false;
         if (!Validations.hasText(et_routerNo, "Please Router Number"))
             ret = false;
-        if (!Validations.hasText(et_businessnmae, "Please Enter Business Name"))
+     */   if (!Validations.hasText(et_businessnmae, "Please Enter Business Name"))
             ret = false;
         if (!Validations.hasText(et_opentime, "Please Select Open Time"))
             ret = false;
@@ -461,7 +454,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void updateprofile() {
+ /*   private void updateprofile() {
         loadingDialog.show();
         StringRequest stringRequest;
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -606,8 +599,121 @@ public class ProfileFragment extends Fragment {
                 MY_SOCKET_TIMEOUT_MS,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-    }
+    }*/
 
+    public void updateUserData(String camImage) {
+        loadingDialog.show();
+
+        MultiPart_Key_Value_Model OneObject = new MultiPart_Key_Value_Model();
+        Map<String, String> fileParams = new HashMap<>();
+
+        if (camImage == null || camImage.equalsIgnoreCase("")) {
+        } else {
+            fileParams.put("img", String.valueOf(camImage));
+        }
+        System.out.println("priya Op" + camImage);
+
+
+        Map<String, String> Stringparams = new HashMap<String, String>();
+
+
+        fullname = et_fullname.getText().toString();
+        email = et_email.getText().toString();
+        mobilno = et_mobilno.getText().toString();
+        businessnmae = et_businessnmae.getText().toString();
+        opentime = et_opentime.getText().toString();
+        closetime = et_closetime.getText().toString();
+
+
+        if (camImage == null || camImage.equalsIgnoreCase("")) {
+        } else {
+            Stringparams.put("img", String.valueOf(camImage));
+        }
+        Stringparams.put("Accept", "application/json");
+        Stringparams.put("Content-Type", "application/json");
+        Stringparams.put("name", fullname);
+        Stringparams.put("address", strAdd);
+        //Stringparams.put("dob", str_dob);
+        Stringparams.put("email", email);
+       /* Stringparams.put("bank_name", bankname);
+        Stringparams.put("bank_account_no", accountNo);
+      */
+
+       Stringparams.put("cus_lat", stringLatitude);
+        Stringparams.put("cus_long", stringLongitude);
+      /*  Stringparams.put("router_no", routerNo);
+        Stringparams.put("ssn_no", ssn);
+   */     Stringparams.put("mobile_no", mobilno);
+        Stringparams.put("business_name", businessnmae);
+        Stringparams.put("open_time", opentime);
+        Stringparams.put("close_time", closetime);
+        Stringparams.put("id", user_id);
+        Stringparams.put("customer_type", "2");
+        Log.e("params", Stringparams.toString());
+
+
+        OneObject.setUrl(AppConstant.API_UPDATE_PROFILE);
+        OneObject.setFileparams(fileParams);
+        System.out.println("fileparam" + fileParams);
+        System.out.println("UTL" + OneObject.toString());
+        OneObject.setStringparams(Stringparams);
+        System.out.println("string" + Stringparams);
+
+        MultipartFileUploaderAsync someTask = new MultipartFileUploaderAsync(getActivity(), OneObject, new OnEventListener<String>() {
+            @Override
+            public void onSuccess(String object) {
+                loadingDialog.dismiss();
+                System.out.println("Result" + object);
+                //    Toast.makeText(getActivity(), "ress" + object, Toast.LENGTH_LONG).show();
+
+                try {
+                    final JSONObject j = new JSONObject(object);
+                    int message_code = j.getInt("message_code");
+                    String message = j.getString("message");
+                    if (loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                    if (message_code == 1) {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                        builder.setMessage(message)
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        getUserDetails();
+
+                                    }
+                                });
+                        android.support.v7.app.AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        message = j.getString("message");
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                        builder.setMessage(message)
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                });
+                        android.support.v7.app.AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                } catch (JSONException e) {
+                    System.out.println("jsonexeption" + e.toString());
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Exception e) {
+                System.out.println("onFailure" + e);
+
+            }
+        });
+        someTask.execute();
+        return;
+    }
 
     private void getUserDetails() {
 loadingDialog.show();
@@ -647,11 +753,7 @@ loadingDialog.show();
                                 String open_time = jsonObject.getString("open_time");
                                 String close_time = jsonObject.getString("close_time");
 
-                                et_bankname.setText(customer_bank_name);
-                                et_accountNo.setText(customer_acc_num);
-                                et_ssn.setText(customer_ssn);
-                                et_routerNo.setText(router_number);
-                                et_businessnmae.setText(business_name);
+                                 et_businessnmae.setText(business_name);
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
                                 locationAutocompleteFragment.setText(customer_address);
@@ -757,7 +859,7 @@ loadingDialog.show();
                         String date = dayOfMonth + "-" + list_of_count + "-" + year;
                         str_dob = year + "/" + list_of_count + "/" + dayOfMonth;
                         Log.e("DateFormatChange", str_dob);
-                        et_dob.setText(str_dob);
+                        //et_dob.setText(str_dob);
 
 
                     }

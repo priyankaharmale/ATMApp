@@ -40,6 +40,9 @@
         <activity
             android:name=".atm.activity.RequestMoneyDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".atm.activity.AddBankAccountActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
             android:name=".activity.RegistrationActivity"

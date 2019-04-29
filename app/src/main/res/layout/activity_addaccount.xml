@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorNavi"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:padding="@dimen/dimens_5dp"
+                android:id="@+id/iv_back"
+                android:src="@drawable/arrow_icon"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_16sp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:padding="@dimen/dimens_5dp"
+                android:src="@drawable/dashboard_logo"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_16sp" />
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colororange">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Bank Account"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/dimens_20dp"
+
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimens_5dp"
+        android:text="Date of Birth"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <EditText
+        android:id="@+id/et_dob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint="Dob"
+        android:focusableInTouchMode="false"
+        android:inputType="text"
+        android:textColor="@color/coloBlack"
+        android:textColorHint="@color/colorGray"
+        android:textSize="@dimen/text_size_16sp" />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimens_5dp"
+        android:text="Bank Name"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <EditText
+        android:id="@+id/et_bankname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint=""
+        android:inputType="text"
+        android:textColor="@color/coloBlack"
+        android:textColorHint="@color/colorGray"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimens_5dp"
+        android:text="Bank Account Number"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <EditText
+        android:id="@+id/et_accountNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint=""
+        android:inputType="number"
+        android:textColor="@color/coloBlack"
+        android:textColorHint="@color/colorGray"
+        android:textSize="@dimen/text_size_16sp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimens_5dp"
+        android:text="Social Security Number"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <EditText
+        android:id="@+id/et_ssn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint=""
+        android:inputType="number"
+        android:textColor="@color/coloBlack"
+        android:textColorHint="@color/colorGray"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimens_5dp"
+        android:text="Router Number"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <EditText
+        android:id="@+id/et_routerNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint=""
+        android:inputType="number"
+        android:textColor="@color/coloBlack"
+        android:textColorHint="@color/colorGray"
+        android:textSize="@dimen/text_size_16sp" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_balance"
+        android:layout_marginLeft="@dimen/dimens_20dp"
+        android:layout_marginRight="@dimen/dimens_20dp"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:background="@drawable/login_button_bg"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite" />
+</LinearLayout>
+
+</LinearLayout>

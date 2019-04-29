@@ -148,6 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimens_5dp"
                 android:text="Date of Birth"
+                android:visibility="gone"
                 android:textSize="@dimen/text_size_16sp" />
 
             <EditText
@@ -156,6 +157,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:hint="Dob"
+                android:visibility="gone"
+
                 android:focusableInTouchMode="false"
                 android:inputType="text"
                 android:textColor="@color/coloBlack"
@@ -163,78 +166,7 @@
                 android:textSize="@dimen/text_size_16sp" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimens_5dp"
-                android:text="Bank Name"
-                android:textSize="@dimen/text_size_16sp" />
 
-            <EditText
-                android:id="@+id/et_bankname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:hint=""
-                android:inputType="text"
-                android:textColor="@color/coloBlack"
-                android:textColorHint="@color/colorGray"
-                android:textSize="@dimen/text_size_16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimens_5dp"
-                android:text="Bank Account Number"
-                android:textSize="@dimen/text_size_16sp" />
-
-            <EditText
-                android:id="@+id/et_accountNo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:hint=""
-                android:inputType="number"
-                android:textColor="@color/coloBlack"
-                android:textColorHint="@color/colorGray"
-                android:textSize="@dimen/text_size_16sp" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimens_5dp"
-                android:text="Social Security Number"
-                android:textSize="@dimen/text_size_16sp" />
-
-            <EditText
-                android:id="@+id/et_ssn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:hint=""
-                android:inputType="number"
-                android:textColor="@color/coloBlack"
-                android:textColorHint="@color/colorGray"
-                android:textSize="@dimen/text_size_16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimens_5dp"
-                android:text="Router Number"
-                android:textSize="@dimen/text_size_16sp" />
-
-            <EditText
-                android:id="@+id/et_routerNo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:hint=""
-                android:inputType="number"
-                android:textColor="@color/coloBlack"
-                android:textColorHint="@color/colorGray"
-                android:textSize="@dimen/text_size_16sp" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -280,7 +280,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
 
     @Override
     public void selctedImge(String amount, String image) {
-        Toast.makeText(this, "Selected Amount " + amount + image, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, "Selected Amount " + amount + image, Toast.LENGTH_SHORT).show();
         stramount = amount;
         images = image;
     }

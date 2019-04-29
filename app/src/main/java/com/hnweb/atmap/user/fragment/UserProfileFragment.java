@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -50,6 +51,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.hnweb.atmap.MultipartRequest.MultiPart_Key_Value_Model;
+import com.hnweb.atmap.MultipartRequest.MultipartFileUploaderAsync;
+import com.hnweb.atmap.MultipartRequest.OnEventListener;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.user.adaptor.MonthAdaptor;
 import com.hnweb.atmap.user.adaptor.YearAdaptor;
@@ -168,7 +172,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         }
 
 
-         getUserDetails();
+        getUserDetails();
 
         et_cardNumber.addTextChangedListener(new TextWatcher() {
             private static final char space = ' ';
@@ -416,8 +420,109 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         return ret;
     }
 
+    public void updateUserData(String camImage) {
+        loadingDialog.show();
 
-    private void updateprofile() {
+        MultiPart_Key_Value_Model OneObject = new MultiPart_Key_Value_Model();
+        Map<String, String> fileParams = new HashMap<>();
+
+        if (camImage == null || camImage.equalsIgnoreCase("")) {
+        } else {
+            fileParams.put("img", String.valueOf(camImage));
+        }
+        System.out.println("priya Op" + camImage);
+
+
+        Map<String, String> Stringparams = new HashMap<String, String>();
+        fullname = et_fullname.getText().toString();
+        email = et_email.getText().toString();
+        mobilno = et_mobilno.getText().toString();
+
+
+        Stringparams.put("Accept", "application/json");
+        Stringparams.put("Content-Type", "application/json");
+        Stringparams.put("name", fullname);
+        Stringparams.put("address", strAdd);
+        Stringparams.put("email", email);
+        Stringparams.put("dob", str_dob);
+        Stringparams.put("cus_lat", stringLatitude);
+        Stringparams.put("cus_long", stringLongitude);
+        Stringparams.put("mobile_no", mobilno);
+        Stringparams.put("customer_type", "1");
+        Stringparams.put("cardnumber", et_cardNumber.getText().toString());
+        Stringparams.put("exp_month", et_expirymonth.getText().toString());
+        Stringparams.put("exp_year", et_expiryyear.getText().toString());
+        Stringparams.put("cvc", et_cvv.getText().toString());
+        Stringparams.put("id", user_id);
+        Log.e("params", Stringparams.toString());
+
+
+        OneObject.setUrl(AppConstant.API_UPDATE_PROFILE);
+        OneObject.setFileparams(fileParams);
+        System.out.println("fileparam" + fileParams);
+        System.out.println("UTL" + OneObject.toString());
+        OneObject.setStringparams(Stringparams);
+        System.out.println("string" + Stringparams);
+
+        MultipartFileUploaderAsync someTask = new MultipartFileUploaderAsync(getActivity(), OneObject, new OnEventListener<String>() {
+            @Override
+            public void onSuccess(String object) {
+                loadingDialog.dismiss();
+                System.out.println("Result" + object);
+                //    Toast.makeText(getActivity(), "ress" + object, Toast.LENGTH_LONG).show();
+
+                try {
+                    final JSONObject j = new JSONObject(object);
+                    int message_code = j.getInt("message_code");
+                    String message = j.getString("message");
+                    if (loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                    if (message_code == 1) {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                        builder.setMessage(message)
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        getUserDetails();
+
+                                    }
+                                });
+                        android.support.v7.app.AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        message = j.getString("message");
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                        builder.setMessage(message)
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                });
+                        android.support.v7.app.AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                } catch (JSONException e) {
+                    System.out.println("jsonexeption" + e.toString());
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Exception e) {
+                System.out.println("onFailure" + e);
+
+            }
+        });
+        someTask.execute();
+        return;
+    }
+
+
+
+    /*private void updateprofile() {
         loadingDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -509,7 +614,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
             }
         };
         queue.add(strRequest);
-    }
+    }*/
 
 
     private void getUserDetails() {
@@ -707,7 +812,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
             case R.id.btn_update:
                 if (checkValidation()) {
                     if (Utils.isNetworkAvailable(getActivity())) {
-                        updateprofile();
+                        updateUserData(camImage);
 
                     } else {
                         Utils.myToast1(getActivity());

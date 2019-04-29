@@ -33,11 +33,11 @@ public class RequestMoneyAdapter extends RecyclerView.Adapter<RequestMoneyAdapte
     private List<User> puzzleList;
     private Activity activity;
     String pid;
-    String requestdate,requesttime;
     private TextView txtScore;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_date, tv_time;
+        String requestdate, requesttime;
 
         public ImageView iv_doller;
 
@@ -66,11 +66,10 @@ public class RequestMoneyAdapter extends RecyclerView.Adapter<RequestMoneyAdapte
 
     @SuppressLint({"NewApi", "ResourceAsColor"})
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         User puzzle = puzzleList.get(position);
         //holder.tv_date.setText(puzzleList.get(position).getRequest_time());
-
 
 
         try {
@@ -91,9 +90,9 @@ public class RequestMoneyAdapter extends RecyclerView.Adapter<RequestMoneyAdapte
             Date dateu = null;
             try {
                 dateu = date.parse(date.format(d));
-                requestdate = formatter.format(dateu);
-                System.out.println("str_startDate: " +   requestdate);
-                holder.tv_date.setText(  requestdate);
+                holder.requestdate = formatter.format(dateu);
+                System.out.println("str_startDate: " + holder.requestdate);
+                holder.tv_date.setText(holder.requestdate);
 
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
@@ -104,10 +103,10 @@ public class RequestMoneyAdapter extends RecyclerView.Adapter<RequestMoneyAdapte
                 SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
                 SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm a");
                 Date time1 = sdf1.parse(time.format(d));
-                requesttime=sdf2.format(time1);
+                holder.requesttime = sdf2.format(time1);
                 System.out.println("MYTIME" + sdf2.format(time1));
 
-                holder.tv_time.setText(requesttime);
+                holder.tv_time.setText(holder.requesttime);
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
@@ -115,13 +114,40 @@ public class RequestMoneyAdapter extends RecyclerView.Adapter<RequestMoneyAdapte
             e.printStackTrace();
         }
 
+        if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("10")) {
+            holder.iv_doller.setImageResource(R.drawable.ten_usd);
+
+        } else if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("20")) {
+            holder.iv_doller.setImageResource(R.drawable.twenty_usd);
+
+        } else if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("40")) {
+            holder.iv_doller.setImageResource(R.drawable.forty_usd);
+
+
+        } else if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("60")) {
+            holder.iv_doller.setImageResource(R.drawable.sixty_usd);
+
+
+        } else if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("80")) {
+            holder.iv_doller.setImageResource(R.drawable.eighty_usd);
+
+        } else if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("100")) {
+            holder.iv_doller.setImageResource(R.drawable.hundred_usd);
+
+
+        } else if (puzzleList.get(position).getRequest_amount().equalsIgnoreCase("200")) {
+            holder.iv_doller.setImageResource(R.drawable.two_hundred_usd);
+
+
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, RequestMoneyDetailsActivity.class);
                 intent.putExtra("name", puzzleList.get(position).getCustomer_name());
-                intent.putExtra("requestdate", requestdate);
-                intent.putExtra("requesttime",requesttime);
+                intent.putExtra("requestdate", holder.requestdate);
+                intent.putExtra("requesttime", holder.requesttime);
+                intent.putExtra("request_id",puzzleList.get(position).getRequest_id());
                 activity.startActivity(intent);
 
             }
