@@ -1,4 +1,4 @@
-package com.hnweb.atmap.MultipartRequest;
+package com.hnweb.atmap.multipartRequest;
 
 import android.content.Context;
 import android.os.AsyncTask;

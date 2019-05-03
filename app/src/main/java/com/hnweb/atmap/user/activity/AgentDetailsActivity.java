@@ -294,4 +294,9 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     public void callbackMonthe(String month) {
 
     }
+
+    @Override
+    public void refresh() {
+
+    }
 }

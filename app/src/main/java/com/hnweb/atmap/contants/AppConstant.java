@@ -80,6 +80,15 @@ public class AppConstant {
     /*=================================================update profile=========================================================*/
     public static final String API_ADDBANKACCOUNT = BASE_URL + "add_bank_details";
 
+
+    /*=================================================AGENT TRANSACTION HISTORY=========================================================*/
+    public static final String API_AGENT_BANKLIST= BASE_URL + "get_bank_details";
+
+
+
+    /*=================================================AGENT TRANSACTION HISTORY=========================================================*/
+    public static final String API_MARKASDEFAULT= BASE_URL + "mark_default";
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);

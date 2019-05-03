@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,9 +50,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.hnweb.atmap.MultipartRequest.MultiPart_Key_Value_Model;
-import com.hnweb.atmap.MultipartRequest.MultipartFileUploaderAsync;
-import com.hnweb.atmap.MultipartRequest.OnEventListener;
+import com.hnweb.atmap.multipartRequest.MultiPart_Key_Value_Model;
+import com.hnweb.atmap.multipartRequest.MultipartFileUploaderAsync;
+import com.hnweb.atmap.multipartRequest.OnEventListener;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.user.adaptor.MonthAdaptor;
 import com.hnweb.atmap.user.adaptor.YearAdaptor;
@@ -794,6 +793,11 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
     @Override
     public void callbackMonthe(String month) {
         et_expirymonth.setText(month);
+
+    }
+
+    @Override
+    public void refresh() {
 
     }
 

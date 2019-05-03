@@ -30,7 +30,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:layout_weight="0.8"
                 android:orientation="vertical">
 
                 <TextView
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimens_10dp"
                 android:layout_marginTop="@dimen/dimens_30dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.1"
                 android:text="Successful"
                 android:textColor="@android:color/holo_green_dark"
                 />

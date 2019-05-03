@@ -1,4 +1,4 @@
-package com.hnweb.atmap.MultipartRequest;
+package com.hnweb.atmap.multipartRequest;
 
 /**
  * Created by Hnweb on 6/21/2017.

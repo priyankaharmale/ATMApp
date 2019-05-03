@@ -1,4 +1,4 @@
-package com.hnweb.atmap.MultipartRequest;
+package com.hnweb.atmap.multipartRequest;
 
 import java.io.BufferedReader;
 import java.io.File;
