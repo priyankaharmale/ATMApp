@@ -46,10 +46,11 @@ public class TranscationHistoryAdapter extends RecyclerView.Adapter<TranscationH
                 .inflate(R.layout.adaptor_accounthistory, parent, false));
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         for (int i = 0; i < data.size(); i++) {
-            holder.expandState.append(i, true);
+            holder.expandState.append(i, false);
         }
         final User item = data.get(position);
 
@@ -128,36 +129,55 @@ public class TranscationHistoryAdapter extends RecyclerView.Adapter<TranscationH
 
         holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
         holder.expandableLayout.setInRecyclerView(true);
-        holder.expandableLayout.setExpanded(false);
+
         holder.expandableLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorblue));
 
-
         holder.expandableLayout.setExpanded(holder.expandState.get(position));
+
+
+
         holder.expandableLayout.setListener(new ExpandableLayoutListenerAdapter() {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onPreOpen() {
-                createRotateAnimator(holder.buttonLayout, 0f, 180f).start();
+
+                createRotateAnimator(holder.iv_arrow, 0f, 180f).start();
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorblue));
-                      holder.expandState.put(position, true);
+                holder.expandState.put(position, true);
+                holder.expandableLayout.setExpanded(true);
+                holder.iv_arrow.setImageResource(R.drawable.shape_green);
+
+
             }
 
             @SuppressLint("ResourceAsColor")
             @Override
             public void onPreClose() {
-                createRotateAnimator(holder.buttonLayout, 180f, 0f).start();
+                createRotateAnimator(holder.iv_arrow, 180f, 0f).start();
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
-                     holder.expandState.put(position, false);
+                holder.expandState.put(position, false);
+                holder.iv_arrow.setImageResource(R.drawable.shape);
+
+
             }
         });
 
-        holder.buttonLayout.setRotation(holder.expandState.get(position) ? 180f : 0f);
-        holder.buttonLayout.setOnClickListener(new View.OnClickListener() {
+        holder.iv_arrow.setRotation(holder.expandState.get(position) ? 180f : 0f);
+        holder.iv_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 onClickButton(holder.expandableLayout);
             }
         });
+
+        if (data.get(position).getRequest_status().equalsIgnoreCase("1")) {
+            holder.iv_check.setImageResource(R.drawable.doublecheck);
+            holder.tv_status.setText("Successful");
+        } else if (data.get(position).getRequest_status().equalsIgnoreCase("0")) {
+            holder.iv_check.setImageResource(R.drawable.cancel);
+            holder.tv_status.setText("Cancle");
+            holder.tv_status.setTextColor(R.color.colorRed);
+        }
     }
 
     private void onClickButton(final ExpandableLayout expandableLayout) {
@@ -170,9 +190,9 @@ public class TranscationHistoryAdapter extends RecyclerView.Adapter<TranscationH
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_date, tv_cardnumber, tv_time, tv_user_name;
+        public TextView tv_date, tv_cardnumber, tv_time, tv_user_name, tv_status;
         private SparseBooleanArray expandState = new SparseBooleanArray();
-        public ImageView buttonLayout, iv_doller;
+        public ImageView iv_arrow, iv_doller, iv_check;
         String requesttime, requestdate;
         /**
          * You must use the ExpandableLinearLayout in the recycler view.
@@ -185,9 +205,11 @@ public class TranscationHistoryAdapter extends RecyclerView.Adapter<TranscationH
             tv_date = ( TextView ) v.findViewById(R.id.tv_date);
             tv_time = v.findViewById(R.id.tv_time);
             tv_cardnumber = v.findViewById(R.id.tv_cardnumber);
-            buttonLayout = v.findViewById(R.id.iv_arrow);
+            iv_arrow = v.findViewById(R.id.iv_arrow);
             iv_doller = v.findViewById(R.id.iv_doller);
             tv_user_name = v.findViewById(R.id.tv_user_name);
+            tv_status = v.findViewById(R.id.tv_status);
+            iv_check = v.findViewById(R.id.iv_check);
             expandableLayout = ( ExpandableLinearLayout ) v.findViewById(R.id.expandableLayout);
         }
     }

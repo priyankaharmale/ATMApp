@@ -104,6 +104,24 @@ public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.MyView
             holder.tv_status.setText("Default");
 
         }
+
+        System.out.println("agentBanks" + agentBanks.get(position).getAgent_acc_num().substring(0, agentBanks.get(position).getAgent_acc_num().length() - 2));
+
+        String new_word = agentBanks.get(position).getAgent_acc_num().substring(agentBanks.get(position).getAgent_acc_num().length() - 4);
+        String substring2 = agentBanks.get(position).getAgent_acc_num().substring(0, agentBanks.get(position).getAgent_acc_num().length() - 4);
+
+        Log.e("new_word", new_word);
+
+        int len = substring2.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append('*');
+        }
+        Log.e("substring", sb.toString());
+
+        String newbankaccoutn = sb.toString() + new_word;
+        Log.e("newbankaccoutn", newbankaccoutn);
+        holder.tv_accNo.setText(newbankaccoutn);
     }
 
 

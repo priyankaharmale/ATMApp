@@ -43,11 +43,11 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_profile"
                 android:layout_width="@dimen/dimens_100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimens_70dp"
                 android:layout_marginLeft="@dimen/dimens_10dp"
-                android:layout_marginTop="@dimen/dimens_20dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
                 android:layout_weight="0.2"
-                android:src="@drawable/ten_usd" />
+                android:src="@drawable/hotel_no_img" />
 
             <LinearLayout
                 android:layout_width="match_parent"

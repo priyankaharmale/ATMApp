@@ -5,7 +5,6 @@
     <color name="colorAccent">#902705</color>
     <color name="blue">#4c94e4</color>
     <color name="colorWhite">#FFFFFF</color>
-
     <color name="coloBlack">#000000</color>
     <color name="colorGray">#DCDCDC</color>
     <color name="lightgray">#F3F2F2</color>
@@ -13,4 +12,5 @@
     <color name="colororange">#fe5722</color>
     <color name="colorblue">#3a5c68</color>
     <color name="colorNavi">#902705</color>
+    <color name="colorRed">#FF0000</color>
 </resources>

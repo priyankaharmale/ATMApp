@@ -460,12 +460,10 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
                 markers = new ArrayList<Marker>();
                 for (int i = 0; i < agentArrayList.size(); i++) {
 
-                    if(agentArrayList.get(i).getCustomer_lat().equalsIgnoreCase("") || agentArrayList.get(i).getCustomer_lat()==null
-                            || agentArrayList.get(i).getCustomer_lat().equalsIgnoreCase("null"))
-                    {
+                    if (agentArrayList.get(i).getCustomer_lat().equalsIgnoreCase("") || agentArrayList.get(i).getCustomer_lat() == null
+                            || agentArrayList.get(i).getCustomer_lat().equalsIgnoreCase("null")) {
 
-                    }else
-                    {
+                    } else {
                         Double latitude = Double.valueOf(agentArrayList.get(i).getCustomer_lat());
                         Double longitude = Double.valueOf(agentArrayList.get(i).getCustomer_long());
 
@@ -637,25 +635,32 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
                 try {
                     infoWindowData = agentArrayList.get(markers.indexOf(marker));
 
-
-                    try {
+                    if (infoWindowData.getCustomer_profile_pic() == null || infoWindowData.getCustomer_profile_pic().equals("") || infoWindowData.getCustomer_profile_pic().equals("null")) {
+                        Glide.with(getActivity())
+                                .load(R.drawable.hotel_no_img)
+                                .into(iv_profile);
+                    } else {
                         Glide.with(getActivity())
                                 .load(infoWindowData.getCustomer_profile_pic())
-                                .centerCrop()
-                                .crossFade()
+                                .placeholder(R.drawable.hotel_no_img)
                                 .listener(new RequestListener<String, GlideDrawable>() {
+                                    @Override
                                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                         return false;
                                     }
 
+                                    @Override
                                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                         return false;
                                     }
                                 })
                                 .into(iv_profile);
-                    } catch (Exception e) {
-                        Log.e("Exception", e.getMessage());
+
+
+                        //  picUserDetails_iv  = (ImageView) findViewById(R.id.picUserDetails_iv);
                     }
+
+
                     tv_churchname.setText(infoWindowData.getBusiness_name());
                     tv_opentime.setText(infoWindowData.getOpen_time());
                     tv_hotelNamefull.setText(infoWindowData.getBusiness_name());
@@ -690,14 +695,22 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
         this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton1, getResources().getDrawable(R.drawable.get_direction_button_bg), getResources().getDrawable(R.drawable.get_direction_button_bg)) {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
+               /* Intent intent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://ditu.google.cn/maps?f=d&source=s_d" +
                                 "&saddr=" + "&daddr=" + marker.getPosition().latitude + " " + marker.getPosition().longitude + "&hl=zh&t=m&dirflg=d"));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);*/
+
+
+                String desLocation = "&daddr=" + infoWindowData.getCustomer_lat() + "," + infoWindowData.getCustomer_long();
+                Log.e("desLocation", desLocation);
+                String currLocation = "saddr=" + 25.7617 + "," + -80.1918;
+                Log.e("currLocation", currLocation);
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" + currLocation + desLocation + "&dirflg=d"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                 startActivity(intent);
-
-
                        /* String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)",  marker.getPosition().latitude, marker.getPosition().longitude, "Where the party is at");
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                         intent.setPackage("com.google.android.apps.maps");

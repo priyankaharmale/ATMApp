@@ -23,6 +23,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.inteface.OnCallBack;
@@ -50,12 +54,12 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     SharedPreferences prefs;
     String user_id, agentId;
     String stramount = "";
-    String address, businessName;
+    String address, businessName, customer_profile_pic;
     String images;
     ArrayList personImages = new ArrayList<>(Arrays.asList(R.drawable.ten_usd, R.drawable.twenty_usd, R.drawable.forty_usd, R.drawable.sixty_usd, R.drawable.eighty_usd, R.drawable.hundred_usd, R.drawable.two_hundred_usd));
     ArrayList personNames = new ArrayList<>(Arrays.asList("10", "20", "40", "60", "80", "100", "200"));
     OnCallBack onCallBack;
-    ImageView iv_fav;
+    ImageView iv_fav, iv_share, iv_imgae;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,8 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
         tv_opentime = findViewById(R.id.tv_opentime);
         tv_closetime = findViewById(R.id.tv_closetime);
         tv_address = findViewById(R.id.tv_address);
+        iv_share = findViewById(R.id.iv_share);
+        iv_imgae = findViewById(R.id.iv_imgae);
         Intent intent = getIntent();
         agentId = intent.getStringExtra("agentId");
         prefs = getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
@@ -100,7 +106,12 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
             }
         });
 
-
+        iv_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareIt();
+            }
+        });
     }
 
 
@@ -135,7 +146,33 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     String opentime = jsonObject.getString("open_time");
                                     String cloasetime = jsonObject.getString("close_time");
                                     businessName = jsonObject.getString("business_name");
+                                    customer_profile_pic = jsonObject.getString("customer_profile_pic");
 
+
+                                    if (customer_profile_pic == null || customer_profile_pic.equals("") || customer_profile_pic.equals("null")) {
+                                        Glide.with(AgentDetailsActivity.this)
+                                                .load(R.drawable.no_img)
+                                                .into(iv_imgae);
+                                    } else {
+                                        Glide.with(AgentDetailsActivity.this)
+                                                .load(customer_profile_pic)
+                                                .placeholder(R.drawable.no_img)
+                                                .listener(new RequestListener<String, GlideDrawable>() {
+                                                    @Override
+                                                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                                        return false;
+                                                    }
+
+                                                    @Override
+                                                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                                        return false;
+                                                    }
+                                                })
+                                                .into(iv_imgae);
+
+
+                                        //  picUserDetails_iv  = (ImageView) findViewById(R.id.picUserDetails_iv);
+                                    }
                                     tv_hotelName.setText(businessName);
                                     tv_closetime.setText(cloasetime);
                                     tv_opentime.setText(opentime);
@@ -280,7 +317,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
 
     @Override
     public void selctedImge(String amount, String image) {
-      //  Toast.makeText(this, "Selected Amount " + amount + image, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this, "Selected Amount " + amount + image, Toast.LENGTH_SHORT).show();
         stramount = amount;
         images = image;
     }
@@ -298,5 +335,15 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     @Override
     public void refresh() {
 
+    }
+
+
+    private void shareIt() {
+//sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ATM App");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Click here to Download the App \n ");
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 }

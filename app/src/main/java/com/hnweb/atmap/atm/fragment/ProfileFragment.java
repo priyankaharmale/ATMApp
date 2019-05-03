@@ -48,11 +48,12 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import com.hnweb.atmap.R;
+import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.multipartRequest.MultiPart_Key_Value_Model;
 import com.hnweb.atmap.multipartRequest.MultipartFileUploaderAsync;
 import com.hnweb.atmap.multipartRequest.OnEventListener;
-import com.hnweb.atmap.R;
-import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.Utils;
 import com.hnweb.atmap.utils.Validations;
@@ -758,7 +759,7 @@ loadingDialog.show();
                                 et_closetime.setText(close_time);
                                 et_opentime.setText(open_time);
 
-                                if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null") || userPic_url.equals("http://tech599.com/tech599.com/johnaks/FirstFruit/")) {
+                                if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null")) {
                                     Glide.with(getActivity())
                                             .load(R.drawable.image_marie)
                                             .into(iv_profilePic);
