@@ -87,7 +87,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 @SuppressLint("ValidFragment")
-public class MapViewFragment extends Fragment implements View.OnClickListener, OnMarkerClickListener, OnMapReadyCallback {
+public class MapViewFragment extends Fragment implements  OnMarkerClickListener, OnMapReadyCallback {
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -290,16 +290,7 @@ public class MapViewFragment extends Fragment implements View.OnClickListener, O
 
     }
 
-    @Override
-    public void onClick(View v) {
-        Fragment fragment = null;
-        switch (v.getId()) {
 
-
-            default:
-                break;
-        }
-    }
 
 
     private void getMapList() {

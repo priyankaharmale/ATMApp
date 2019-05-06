@@ -86,7 +86,7 @@
                     android:layout_marginLeft="@dimen/dimens_10dp"
                     android:layout_weight="0.1"
                     android:id="@+id/iv_fav"
-                    android:src="@drawable/favorite_icon" />
+                    android:src="@drawable/unfavorite_icon" />
 
                 <ImageView
                     android:layout_width="0dp"

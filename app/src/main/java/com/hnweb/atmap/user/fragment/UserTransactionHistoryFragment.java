@@ -1,10 +1,9 @@
-package com.hnweb.atmap.atm.fragment;
+package com.hnweb.atmap.user.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -24,11 +24,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.atm.adaptor.RequestMoneyAdapter;
+import com.hnweb.atmap.atm.adaptor.TranscationHistoryAdapter;
 import com.hnweb.atmap.atm.bo.User;
 import com.hnweb.atmap.contants.AppConstant;
-import com.hnweb.atmap.user.activity.AgentBarcodeScanActivity;
-import com.hnweb.atmap.user.bo.Agent;
+import com.hnweb.atmap.user.adaptor.UserTranscationHistoryAdapter;
 import com.hnweb.atmap.utils.LoadingDialog;
 
 import org.json.JSONArray;
@@ -41,47 +40,37 @@ import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class RequestMoneyFragment extends Fragment {
-    RecyclerView recyclerView;
+public class UserTransactionHistoryFragment extends Fragment {
+
+
+    LinearLayout ll_addacount;
     LoadingDialog loadingDialog;
     ArrayList<User> users;
+    UserTranscationHistoryAdapter requestMoneyAdapter;
+    RecyclerView recyclerView;
     SharedPreferences prefs;
     String user_id;
-    RequestMoneyAdapter requestMoneyAdapter;
 
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_requestmoney, container, false);
+        View view = inflater.inflate(R.layout.fragment_transactionhistory, container, false);
+        loadingDialog = new LoadingDialog(getContext());
+
         recyclerView = view.findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = new LoadingDialog(getActivity());
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
-        final Handler refreshHandler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                // do updates for imageview
-                if(!(getActivity()).isFinishing()) {
-                    refreshHandler.postDelayed(this, 15 * 1000);
-                    getRequestMoneyList();
-                }
-
-            }
-        };
-        refreshHandler.postDelayed(runnable, 15 * 1000);
-        getRequestMoneyList();
-
+        getTransactionhistory();
         return view;
     }
 
-
-
-
-    private void getRequestMoneyList() {
+    private void getTransactionhistory() {
         loadingDialog.show();
-        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_REQUESTMONEYLIST,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_USER_TRANSACTION_HISTORY,
                 new Response.Listener<String>() {
 
                     @Override
@@ -105,6 +94,7 @@ public class RequestMoneyFragment extends Fragment {
                                         User agent = new User();
                                         JSONObject jsonObjectpostion = jsonArrayRow.getJSONObject(k);
                                         agent.setCustomer_name(jsonObjectpostion.getString("customer_name"));
+                                        agent.setCustomer_profile_pic(jsonObjectpostion.getString("customer_profile_pic"));
                                         agent.setCustomer_lat(jsonObjectpostion.getString("customer_lat"));
                                         agent.setRequest_user_id(jsonObjectpostion.getString("request_user_id"));
                                         agent.setCustomer_long(jsonObjectpostion.getString("customer_long"));
@@ -118,7 +108,7 @@ public class RequestMoneyFragment extends Fragment {
                                     }
                                     System.out.println("jsonobk" + jsonArrayRow);
                                     System.out.println("agentArrayList size." + users.size());
-                                    requestMoneyAdapter = new RequestMoneyAdapter(users, getActivity());
+                                    requestMoneyAdapter = new UserTranscationHistoryAdapter(users);
                                     recyclerView.setAdapter(requestMoneyAdapter);
 
 
@@ -178,5 +168,6 @@ public class RequestMoneyFragment extends Fragment {
         requestQueue.add(postRequest);
 
     }
+
 
 }

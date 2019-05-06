@@ -122,6 +122,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_20dp"
+android:id="@+id/iv_share"
 
                     android:layout_weight="0.125"
                     android:src="@drawable/share_icon" />

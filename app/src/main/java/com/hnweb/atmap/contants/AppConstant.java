@@ -89,6 +89,22 @@ public class AppConstant {
     /*=================================================AGENT TRANSACTION HISTORY=========================================================*/
     public static final String API_MARKASDEFAULT= BASE_URL + "mark_default";
 
+
+    /*=================================================ADD TO FAV=========================================================*/
+    public static final String API_ADD_TO_FAV = BASE_URL + "like_api";
+
+    /*=================================================REMOVE TO FAV=========================================================*/
+    public static final String API_REMOVE_TO_FAV = BASE_URL + "unlike_api";
+
+
+    /*=================================================SUCCESS TRANSACTION=========================================================*/
+    public static final String API_SUCCESS_TRANSACTION = BASE_URL + "scan_api_result";
+
+
+    /*=================================================AGENT TRANSACTION HISTORY=========================================================*/
+    public static final String API_USER_TRANSACTION_HISTORY = BASE_URL + "user_history";
+
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);

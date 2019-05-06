@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -42,6 +43,7 @@ public class AddBankAccountActivity extends AppCompatActivity {
     LoadingDialog loadingDialog;
     Button btn_submit;
     String str_dob, user_id;
+    ImageView iv_back;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -55,6 +57,7 @@ public class AddBankAccountActivity extends AppCompatActivity {
         et_businessnmae = findViewById(R.id.et_businessnmae);
         et_dob = findViewById(R.id.et_dob);
         btn_submit = findViewById(R.id.btn_submit);
+        iv_back=findViewById(R.id.iv_back);
         loadingDialog = new LoadingDialog(this);
 
         sharedPreferences = getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
@@ -67,6 +70,12 @@ public class AddBankAccountActivity extends AppCompatActivity {
                     addAccount();
                 }
 
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
         et_dob.setOnClickListener(new View.OnClickListener() {

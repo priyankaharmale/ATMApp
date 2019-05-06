@@ -54,11 +54,12 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     SharedPreferences prefs;
     String user_id, agentId;
     String stramount = "";
-    String address, businessName, customer_profile_pic;
+    String address, businessName, customer_profile_pic, like_status = "";
     String images;
     ArrayList personImages = new ArrayList<>(Arrays.asList(R.drawable.ten_usd, R.drawable.twenty_usd, R.drawable.forty_usd, R.drawable.sixty_usd, R.drawable.eighty_usd, R.drawable.hundred_usd, R.drawable.two_hundred_usd));
     ArrayList personNames = new ArrayList<>(Arrays.asList("10", "20", "40", "60", "80", "100", "200"));
     OnCallBack onCallBack;
+    String isClick = "0";
     ImageView iv_fav, iv_share, iv_imgae;
 
     @Override
@@ -105,7 +106,18 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                 }
             }
         });
+        iv_fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                if (isClick.equalsIgnoreCase("0")) {
+                    addToFav(agentId, user_id);
+                } else if (isClick.equalsIgnoreCase("1")) {
+                    removeToFav(agentId, user_id);
+                }
+
+            }
+        });
         iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,7 +135,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
 
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("res_register" + response);
+                        System.out.println("API_GET_AGENTDATA" + response);
                         try {
                             final JSONObject j = new JSONObject(response);
                             int message_code = j.getInt("message_code");
@@ -147,7 +159,15 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     String cloasetime = jsonObject.getString("close_time");
                                     businessName = jsonObject.getString("business_name");
                                     customer_profile_pic = jsonObject.getString("customer_profile_pic");
+                                    like_status = jsonObject.getString("like_status");
 
+                                    if (like_status.equalsIgnoreCase("") || like_status.equalsIgnoreCase("0")) {
+                                        iv_fav.setImageResource(R.drawable.unfavorite_icon);
+                                        isClick = "0";
+                                    } else if (like_status.equalsIgnoreCase("1")) {
+                                        iv_fav.setImageResource(R.drawable.favorite_icon);
+                                        isClick = "1";
+                                    }
 
                                     if (customer_profile_pic == null || customer_profile_pic.equals("") || customer_profile_pic.equals("null")) {
                                         Glide.with(AgentDetailsActivity.this)
@@ -214,6 +234,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                 Map<String, String> params = new HashMap<String, String>();
                 try {
                     params.put("agent_id", agentId);
+                    params.put("user_id", user_id);
 
                 } catch (Exception e) {
                     System.out.println("error" + e.toString());
@@ -346,4 +367,166 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Click here to Download the App \n ");
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
+
+
+    private void addToFav(final String agentId, final String user_id) {
+        loadingDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConstant.API_ADD_TO_FAV,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("res_register" + response);
+                        try {
+                            final JSONObject j = new JSONObject(response);
+                            int message_code = j.getInt("message_code");
+                            String message = j.getString("message");
+
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                            if (message_code == 1) {
+                                message = j.getString("message");
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AgentDetailsActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                iv_fav.setImageResource(R.drawable.favorite_icon);
+                                                isClick = "1";
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
+                            } else {
+                                message = j.getString("message");
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AgentDetailsActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        } catch (JSONException e) {
+                            System.out.println("jsonexeption" + e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String reason = AppUtils.getVolleyError(AgentDetailsActivity.this, error);
+                        AlertUtility.showAlert(AgentDetailsActivity.this, reason);
+                        System.out.println("jsonexeption" + error.toString());
+                    }
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                try {
+                    params.put("agent_id", agentId);
+                    params.put("user_id", user_id);
+
+                } catch (Exception e) {
+                    System.out.println("error" + e.toString());
+                }
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setShouldCache(false);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+    }
+
+    private void removeToFav(final String agentId, final String user_id) {
+        loadingDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConstant.API_REMOVE_TO_FAV,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("res_register" + response);
+                        try {
+                            final JSONObject j = new JSONObject(response);
+                            int message_code = j.getInt("message_code");
+                            String message = j.getString("message");
+
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                            if (message_code == 1) {
+                                message = j.getString("message");
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AgentDetailsActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                iv_fav.setImageResource(R.drawable.unfavorite_icon);
+                                                isClick = "0";
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
+                            } else {
+                                message = j.getString("message");
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AgentDetailsActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        } catch (JSONException e) {
+                            System.out.println("jsonexeption" + e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String reason = AppUtils.getVolleyError(AgentDetailsActivity.this, error);
+                        AlertUtility.showAlert(AgentDetailsActivity.this, reason);
+                        System.out.println("jsonexeption" + error.toString());
+                    }
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                try {
+                    params.put("agent_id", agentId);
+                    params.put("user_id", user_id);
+
+                } catch (Exception e) {
+                    System.out.println("error" + e.toString());
+                }
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setShouldCache(false);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+    }
+
 }

@@ -34,6 +34,11 @@
         <activity
             android:name=".user.activity.AgentBarcodeScanActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".user.activity.SuccessfultransActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity
         android:name=".atm.activity.ScannedBarcodeActivity"
         android:theme="@style/AppTheme.NoActionBar" />

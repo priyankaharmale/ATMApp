@@ -2,7 +2,17 @@ package com.hnweb.atmap.atm.bo;
 
 public class User {
     String customer_name;
+    String hotelName;
     String customer_address;
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
     String customer_lat;
     String customer_long;
     String request_user_id;

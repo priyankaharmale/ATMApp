@@ -30,6 +30,7 @@ import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.user.fragment.MapViewFragment;
 import com.hnweb.atmap.user.fragment.UserProfileFragment;
+import com.hnweb.atmap.user.fragment.UserTransactionHistoryFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
@@ -107,7 +108,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         imageViewClose = navHeader.findViewById(R.id.imageView_close);
         imageViewUpload = navHeader.findViewById(R.id.profile_image_photoupload);
 
-    //    imageViewUpload.setVisibility(View.VISIBLE);
+        //    imageViewUpload.setVisibility(View.VISIBLE);
 
 
         textViewUserName.setText(user_name);
@@ -353,11 +354,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragment = new MapViewFragment();
         } else if (id == R.id.nav_logout) {
             showLogoutAlert();
-        }else if(id==R.id.nav_myprofile)
-        {
+        } else if (id == R.id.nav_myprofile) {
             fragment = new UserProfileFragment();
+        } else if (id == R.id.nav_trashistory) {
+            fragment = new UserTransactionHistoryFragment();
         }
-
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
