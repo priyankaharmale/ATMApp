@@ -44,7 +44,7 @@ import java.util.Map;
 
 public class AgentBarcodeScanActivity extends AppCompatActivity {
     ImageView iv_barcode, iv_dollor, iv_share, iv_back;
-    String barcode, businessName, address, request_id;
+    String barcode, businessName, address, request_id,agentId;
     String image, user_id;
     Bitmap ImageBitmap;
     Button btn_cancletrans;
@@ -67,6 +67,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         address = intent.getStringExtra("address");
         businessName = intent.getStringExtra("businessName");
         request_id = intent.getStringExtra("request_id");
+        agentId= intent.getStringExtra("agentId");
         iv_share = findViewById(R.id.iv_share);
         iv_barcode = findViewById(R.id.iv_barcode);
         iv_dollor = findViewById(R.id.iv_dollor);
@@ -280,6 +281,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
                                 message = j.getString("message");
                                 Intent intent = new Intent(AgentBarcodeScanActivity.this, SuccessfultransActivity.class);
                                 intent.putExtra("request_id", request_id);
+                                intent.putExtra("agentId",agentId);
                                 startActivity(intent);
                                 finish();
                               /*  AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);

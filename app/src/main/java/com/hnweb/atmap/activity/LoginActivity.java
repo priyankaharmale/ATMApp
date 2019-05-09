@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     String user_email = jsonObject.getString("customer_email");
                                     String user_phone = jsonObject.getString("customer_mobile");
                                     String user_type = jsonObject.getString("user_type");
+                                    String customer_profile_pic = jsonObject.getString("customer_profile_pic");
 
 
                                     editorUser.putString(AppConstant.KEY_ID, user_id);
@@ -139,6 +140,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editorUser.putString(AppConstant.KEY_EMAIL, user_email);
                                     editorUser.putString(AppConstant.KEY_PHONE, user_phone);
                                     editorUser.putString(AppConstant.KEY_USERTYPE, user_type);
+                                    editorUser.putString(AppConstant.KEY_IMAGE, customer_profile_pic);
                                     editorUser.commit();
 
 

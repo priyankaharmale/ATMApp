@@ -658,7 +658,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
                                 locationAutocompleteFragment.setText(customer_address);
                                 et_fullname.setText(customer_name);
 
-                                if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null") || userPic_url.equals("http://tech599.com/tech599.com/johnaks/FirstFruit/")) {
+                                if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null")) {
                                     Glide.with(getActivity())
                                             .load(R.drawable.image_marie)
                                             .into(iv_profilePic);

@@ -12,8 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -40,13 +43,17 @@ import java.util.Map;
 public class SuccessfultransActivity extends AppCompatActivity {
     @SuppressLint("NewApi")
 
-    String request_id, user_id;
+    String request_id, user_id, agentId;
     SharedPreferences prefs;
     ImageView iv_doller, iv_back;
     Button btn_wantTowithdrwa;
     TextView tv_date, tv_date2, tv_time, tv_time2, tv_hotelname;
     LoadingDialog loadingDialog;
     Toolbar toolbar;
+    Button btn_submit;
+    RatingBar ratingBar;
+    String rating = "";
+    EditText et_comment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,12 +67,15 @@ public class SuccessfultransActivity extends AppCompatActivity {
         btn_wantTowithdrwa = findViewById(R.id.btn_wantTowithdrwa);
         iv_doller = findViewById(R.id.iv_doller);
         tv_hotelname = findViewById(R.id.tv_hotelname);
-
+        btn_submit = findViewById(R.id.btn_submit);
+        ratingBar = findViewById(R.id.ratingBar);
         prefs = getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
-
+        et_comment = findViewById(R.id.et_comment);
         final Intent intent = getIntent();
+        agentId = intent.getStringExtra("agentId");
         request_id = intent.getStringExtra("request_id");
+
         toolbar = findViewById(R.id.toolbar);
 
         iv_back = toolbar.findViewById(R.id.iv_back);
@@ -86,6 +96,25 @@ public class SuccessfultransActivity extends AppCompatActivity {
                 finish();
             }
         });
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rating.equalsIgnoreCase("")) {
+                    Toast.makeText(SuccessfultransActivity.this, "Please select Rating", Toast.LENGTH_SHORT).show();
+                } else {
+                    submitReviewRating();
+                }
+            }
+        });
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+            // Called when the user swipes the RatingBar
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating1, boolean fromUser) {
+                rating= String.valueOf(rating1);
+            }
+        });
+
         successTranscation(request_id);
     }
 
@@ -238,5 +267,88 @@ public class SuccessfultransActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
 
     }
+
+    private void submitReviewRating() {
+        loadingDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConstant.API_SUBREVIEWRATING,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("res_register" + response);
+                        try {
+                            final JSONObject j = new JSONObject(response);
+                            int message_code = j.getInt("message_code");
+                            String message = j.getString("message");
+
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                            if (message_code == 1) {
+                                message = j.getString("message");
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SuccessfultransActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                onBackPressed();
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
+                            } else {
+                                message = j.getString("message");
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SuccessfultransActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        } catch (JSONException e) {
+                            System.out.println("jsonexeption" + e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String reason = AppUtils.getVolleyError(SuccessfultransActivity.this, error);
+                        AlertUtility.showAlert(SuccessfultransActivity.this, reason);
+                        System.out.println("jsonexeption" + error.toString());
+                    }
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                try {
+                    params.put("user_id", user_id);
+                    params.put("agent_id", agentId);
+                    params.put("rating_given", rating);
+                    params.put("rating_comment", et_comment.getText().toString());
+
+
+                } catch (Exception e) {
+                    System.out.println("error" + e.toString());
+                }
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setShouldCache(false);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+    }
+
 
 }

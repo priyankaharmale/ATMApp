@@ -16,7 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#902705"
+            android:background="#e63a04
+"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <RelativeLayout

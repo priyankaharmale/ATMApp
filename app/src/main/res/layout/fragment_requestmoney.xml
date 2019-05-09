@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:id="@+id/tv_header"
             android:text="Request Money"
             android:textAllCaps="true"
             android:textColor="@color/colorWhite" />

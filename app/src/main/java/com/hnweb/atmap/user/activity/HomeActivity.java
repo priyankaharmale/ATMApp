@@ -25,9 +25,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.contants.AppConstant;
+import com.hnweb.atmap.user.fragment.FavoriteListFragment;
 import com.hnweb.atmap.user.fragment.MapViewFragment;
 import com.hnweb.atmap.user.fragment.UserProfileFragment;
 import com.hnweb.atmap.user.fragment.UserTransactionHistoryFragment;
@@ -358,7 +364,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragment = new UserProfileFragment();
         } else if (id == R.id.nav_trashistory) {
             fragment = new UserTransactionHistoryFragment();
+        } else if (id == R.id.nav_favorite) {
+            fragment = new FavoriteListFragment();
         }
+
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -411,7 +420,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void stateChanged() {
         //getNotificationCount();
 
-       /* user_id = prefs.getString(AppConstant.KEY_ID, null);
+        user_id = prefs.getString(AppConstant.KEY_ID, null);
         profile_image = prefs.getString(AppConstant.KEY_IMAGE, null);
         user_name = prefs.getString(AppConstant.KEY_NAME, null);
         user_email = prefs.getString(AppConstant.KEY_EMAIL, null);
@@ -419,9 +428,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textViewUserName.setText(user_name);
         textViewAdrress.setText(user_email);
 
-        if (profile_image.equals("") || profile_image == null) {
+        if (profile_image.equals("") || profile_image == null || profile_image.equalsIgnoreCase("null")) {
             Glide.with(getApplicationContext())
-                    .load(R.drawable.img_no_pic_navigation)
+                    .load(R.drawable.hotel_no_img)
                     .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .dontAnimate()
@@ -456,7 +465,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             // Toast.makeText(this, "Notification call", Toast.LENGTH_SHORT).show();
 
-        }*/
+        }
     }
 
 

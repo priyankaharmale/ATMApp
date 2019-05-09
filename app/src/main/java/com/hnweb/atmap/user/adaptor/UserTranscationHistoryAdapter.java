@@ -46,12 +46,10 @@ import java.util.List;
 public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTranscationHistoryAdapter.ViewHolder> {
 
     private final List<User> data;
-    private Context context;
-    private static final int PERMISSION_REQUEST_CODE_LOCATION = 1;
-    private Marker mMarker;
+    private static Context context;
 
-    private GoogleMap googleMap;
-    private Circle mCircle;
+
+
 
     public UserTranscationHistoryAdapter(final List<User> data) {
         this.data = data;
@@ -71,6 +69,7 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         for (int i = 0; i < data.size(); i++) {
             holder.expandState.append(i, false);
         }
+        holder.bindView(position);
         final User item = data.get(position);
 
         holder.tv_hotelname.setText(data.get(position).getCustomer_name());
@@ -201,84 +200,6 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         }
 
 
-//        googleMap.setOnMarkerClickListener(this);
-        try {
-            holder.mMapView.onResume(); // needed to get the map to display immediately
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            MapsInitializer.initialize(context.getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        holder.mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                mMap.clear();
-                googleMap.clear();
-                // mMap.setOnMarkerClickListener((OnMarkerClickListener ) getActivity());
-
-                // For showing a move to my location button
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                googleMap.setMyLocationEnabled(true);
-                // googleMap.setOnMarkerClickListener(this);
-                //    googleMap.setOnMarkerClickListener(this);
-                if (googleMap != null) {
-                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-                        @Override
-                        public void onMyLocationChange(Location arg0) {
-                            // TODO Auto-generated method stub
-
-                            LatLng latLng = new LatLng(arg0.getLatitude(), arg0.getLongitude());
-                            googleMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-                            if (mCircle == null || mMarker == null) {
-                                drawMarkerWithCircle(latLng);
-                            } else {
-                                updateMarkerWithCircle(latLng);
-                            }
-                        }
-                    });
-                }
-
-
-                Double latitude = Double.valueOf(data.get(position).getCustomer_lat());
-                Double longitude = Double.valueOf(data.get(position).getCustomer_long());
-
-                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.location_icon);
-                LatLng lati_long_position = new LatLng(latitude, longitude);
-
-                Marker marker = googleMap.addMarker(new MarkerOptions()
-                        .position(lati_long_position)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_icon))
-                );
-
-
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(lati_long_position).zoom(100).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-
-                googleMap.addMarker(new MarkerOptions().position(lati_long_position).title(data.get(position).getCustomer_name())).setIcon(icon);
-                // For zooming automatically to the location of the marker
-
-            }
-
-
-        });
 
 
     }
@@ -292,12 +213,14 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         return data.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder  implements OnMapReadyCallback{
         public TextView tv_date, tv_hotelname, tv_time, tv_user_name, tv_status, tv_address;
         private SparseBooleanArray expandState = new SparseBooleanArray();
         public ImageView iv_arrow, iv_doller, iv_check;
         String requesttime, requestdate;
         MapView mMapView;
+        public GoogleMap map;
+        View layout;
         /**
          * You must use the ExpandableLinearLayout in the recycler view.
          * The ExpandableRelativeLayout doesn't work.
@@ -306,6 +229,8 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
 
         public ViewHolder(View v) {
             super(v);
+            layout = v;
+
             tv_date = ( TextView ) v.findViewById(R.id.tv_date);
             tv_time = v.findViewById(R.id.tv_time);
             tv_hotelname = v.findViewById(R.id.tv_hotelname);
@@ -317,6 +242,51 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
             tv_address = v.findViewById(R.id.tv_address);
             mMapView = v.findViewById(R.id.map);
             expandableLayout = ( ExpandableLinearLayout ) v.findViewById(R.id.expandableLayout);
+
+            if (mMapView != null) {
+                // Initialise the MapView
+                mMapView.onCreate(null);
+                // Set the map ready callback to receive the GoogleMap object
+                mMapView.getMapAsync(this);
+            }
+        }
+
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            MapsInitializer.initialize(context);
+            map = googleMap;
+            setMapLocation();
+        }
+
+
+        private void setMapLocation() {
+            if (map == null) return;
+
+            User data = (User) mMapView.getTag();
+            if (data == null) return;
+
+            Double latitude = Double.valueOf(data.getCustomer_lat());
+            Double longitude = Double.valueOf(data.getCustomer_long());
+
+            LatLng lati_long_position = new LatLng(latitude, longitude);
+
+            // Add a marker for this item and set the camera
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lati_long_position, 100f));
+            map.addMarker(new MarkerOptions().position(lati_long_position));
+
+            // Set the map type back to normal.
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+
+        private void bindView(int pos) {
+
+            // Store a reference of the ViewHolder object in the layout.
+            layout.setTag(this);
+            // Store a reference to the item in the mapView's tag. We use it to get the
+            // coordinate of a location, when setting the map location.
+            mMapView.setTag(data.get(pos));
+
         }
     }
 
@@ -327,21 +297,5 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         return animator;
     }
 
-    private void updateMarkerWithCircle(LatLng latLng) {
-        mCircle.setCenter(latLng);
-        mMarker.setPosition(latLng);
-    }
-
-    private void drawMarkerWithCircle(LatLng latLng) {
-        double radiusInMeters = 3000.0;
-        int strokeColor = 0xffff0000; //red outline
-        int shadeColor = 0x44ff0000; //opaque red fill
-
-        CircleOptions circleOptions = new CircleOptions().center(latLng).radius(radiusInMeters).fillColor(shadeColor).strokeColor(strokeColor).strokeWidth(8);
-        mCircle = googleMap.addCircle(circleOptions);
-
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
-        mMarker = googleMap.addMarker(markerOptions);
-    }
 
 }

@@ -79,10 +79,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_hotelname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_20dp"
-android:id="@+id/tv_hotelname"
                         android:text="Grand Hotel"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/text_size_18sp"
@@ -263,13 +263,52 @@ android:id="@+id/tv_hotelname"
                 android:background="@drawable/splash_screen"
                 android:orientation="vertical">
 
-                <Button
+                <TextView
+                    android:id="@+id/tv_thank"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimens_10dp"
-                    android:id="@+id/btn_wantTowithdrwa"
-                    android:background="@drawable/start_withdrawal_button_bg"
-                    android:text="Want to  Withdraw more ?" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/text_20"
+                    android:gravity="center"
+                    android:text="Thank You, Please Rate Us"
+                    android:textColor="@color/colorWhite" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:id="@+id/ratingBar"
+                    android:rating="0" />
+
+                <EditText
+                    android:id="@+id/et_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="@dimen/dimens_30dp"
+                    android:layout_marginRight="@dimen/dimens_30dp"
+                    android:hint="Please Enter Comment"
+                    android:inputType="text"
+                    android:textColor="@color/coloBlack"
+                    android:textColorHint="@color/colorGray"
+                    android:textSize="@dimen/text_size_16sp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/btn_submit"
+                    android:layout_marginLeft="@dimen/dimens_10dp"
+                    android:layout_marginRight="@dimen/dimens_10dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:background="@drawable/login_button_bg"
+                    android:backgroundTint="@color/colorWhite"
+                    android:src="@drawable/favorite_icon"
+                    android:text="Submit"
+                    android:textSize="@dimen/text_size_12sp" />
+
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -316,6 +355,14 @@ android:id="@+id/tv_hotelname"
                     android:layout_marginTop="@dimen/dimens_10dp"
                     android:text="@string/str_virtul"
                     android:textColor="@color/colorWhite" />
+
+                <Button
+                    android:id="@+id/btn_wantTowithdrwa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimens_10dp"
+                    android:background="@drawable/start_withdrawal_button_bg"
+                    android:text="Want to  Withdraw more ?" />
 
 
             </LinearLayout>

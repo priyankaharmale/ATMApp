@@ -105,6 +105,13 @@ public class AppConstant {
     public static final String API_USER_TRANSACTION_HISTORY = BASE_URL + "user_history";
 
 
+    /*=================================================FAVORITE LIST=========================================================*/
+    public static final String API_FAVLIST = BASE_URL + "get_fev_list";
+
+    /*=================================================FAVORITE LIST=========================================================*/
+    public static final String API_SUBREVIEWRATING = BASE_URL + "rate_api";
+
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);

@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -429,7 +430,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     public void stateChanged() {
         //getNotificationCount();
 
-       /* user_id = prefs.getString(AppConstant.KEY_ID, null);
+        user_id = prefs.getString(AppConstant.KEY_ID, null);
         profile_image = prefs.getString(AppConstant.KEY_IMAGE, null);
         user_name = prefs.getString(AppConstant.KEY_NAME, null);
         user_email = prefs.getString(AppConstant.KEY_EMAIL, null);
@@ -439,7 +440,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
 
         if (profile_image.equals("") || profile_image == null) {
             Glide.with(getApplicationContext())
-                    .load(R.drawable.img_no_pic_navigation)
+                    .load(R.drawable.hotel_no_img)
                     .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .dontAnimate()
@@ -474,7 +475,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
 
             // Toast.makeText(this, "Notification call", Toast.LENGTH_SHORT).show();
 
-        }*/
+        }
     }
 
 

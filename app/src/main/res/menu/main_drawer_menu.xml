@@ -44,7 +44,16 @@
             android:title="@string/str_trashistory" />
 
     </group>
+    <group
+        android:id="@+id/favorite"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/favorite_icon"
 
+            android:title="Favourite" />
+
+    </group>
 
     <group
         android:id="@+id/notification"

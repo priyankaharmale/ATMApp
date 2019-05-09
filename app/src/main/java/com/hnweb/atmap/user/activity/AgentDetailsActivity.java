@@ -281,6 +281,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     intent.putExtra("businessName", businessName);
                                     intent.putExtra("address", address);
                                     intent.putExtra("request_id", request_id);
+                                    intent.putExtra("agentId",agentId);
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     System.out.println("jsonexeption" + e.toString());

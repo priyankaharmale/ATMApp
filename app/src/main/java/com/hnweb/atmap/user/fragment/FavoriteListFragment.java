@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -13,7 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -23,12 +24,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.GoogleMap;
 import com.hnweb.atmap.R;
-import com.hnweb.atmap.atm.adaptor.TranscationHistoryAdapter;
+import com.hnweb.atmap.atm.adaptor.RequestMoneyAdapter;
 import com.hnweb.atmap.atm.bo.User;
 import com.hnweb.atmap.contants.AppConstant;
-import com.hnweb.atmap.user.adaptor.UserTranscationHistoryAdapter;
+import com.hnweb.atmap.user.adaptor.FavoriteAdapter;
 import com.hnweb.atmap.utils.LoadingDialog;
 
 import org.json.JSONArray;
@@ -41,38 +41,34 @@ import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class UserTransactionHistoryFragment extends Fragment {
-
-
-    LinearLayout ll_addacount;
+public class FavoriteListFragment extends Fragment {
+    RecyclerView recyclerView;
     LoadingDialog loadingDialog;
     ArrayList<User> users;
-    UserTranscationHistoryAdapter requestMoneyAdapter;
-    RecyclerView recyclerView;
     SharedPreferences prefs;
     String user_id;
+    FavoriteAdapter requestMoneyAdapter;
+    TextView tv_header;
 
-    @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_transactionhistory, container, false);
-        loadingDialog = new LoadingDialog(getContext());
-
+        View view = inflater.inflate(R.layout.fragment_requestmoney, container, false);
         recyclerView = view.findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = new LoadingDialog(getActivity());
+        tv_header=view.findViewById(R.id.tv_header);
+        tv_header.setText("Favourite");
+
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
-        recyclerView.setRecyclerListener(mRecycleListener);
-        getTransactionhistory();
+        getFavoList();
         return view;
     }
 
-    private void getTransactionhistory() {
+    private void getFavoList() {
         loadingDialog.show();
-        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_USER_TRANSACTION_HISTORY,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_FAVLIST,
                 new Response.Listener<String>() {
 
                     @Override
@@ -96,28 +92,21 @@ public class UserTransactionHistoryFragment extends Fragment {
                                         User agent = new User();
                                         JSONObject jsonObjectpostion = jsonArrayRow.getJSONObject(k);
                                         agent.setCustomer_name(jsonObjectpostion.getString("customer_name"));
-                                        agent.setCustomer_profile_pic(jsonObjectpostion.getString("customer_profile_pic"));
-                                        agent.setCustomer_lat(jsonObjectpostion.getString("customer_lat"));
-                                        agent.setRequest_user_id(jsonObjectpostion.getString("request_user_id"));
+                                        String userPic_url = jsonObjectpostion.getString("customer_profile_pic");
+
+                                      /*  agent.setCustomer_lat(jsonObjectpostion.getString("customer_lat"));
                                         agent.setCustomer_long(jsonObjectpostion.getString("customer_long"));
-                                        agent.setCustomer_address(jsonObjectpostion.getString("customer_address"));
-                                        agent.setRequest_amount(jsonObjectpostion.getString("request_amount"));
-                                        agent.setRequest_status(jsonObjectpostion.getString("request_status"));
-                                        agent.setRequest_barcode(jsonObjectpostion.getString("request_barcode"));
-                                        agent.setRequest_time(jsonObjectpostion.getString("request_time"));
-                                        agent.setRequest_id(jsonObjectpostion.getString("request_id"));
+                                     */   agent.setCustomer_address(jsonObjectpostion.getString("customer_address"));
                                         users.add(agent);
                                     }
-                                    System.out.println("jsonobk" + jsonArrayRow);
-                                    System.out.println("agentArrayList size." + users.size());
-                                    requestMoneyAdapter = new UserTranscationHistoryAdapter(users);
+                                    requestMoneyAdapter = new FavoriteAdapter(users, getActivity());
                                     recyclerView.setAdapter(requestMoneyAdapter);
 
 
                                 } catch (JSONException e) {
                                     System.out.println("jsonexeption" + e.toString());
                                 } catch (Exception e) {
-
+                                    System.out.println("jsonexeption" + e.toString());
                                 }
                             } else {
                                 message = j.getString("message");
@@ -159,7 +148,7 @@ public class UserTransactionHistoryFragment extends Fragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 // the POST parameters:
-                params.put("id", user_id);
+                params.put("user_id", user_id);
                 Log.e("Params", params.toString());
                 return params;
             }
@@ -170,20 +159,5 @@ public class UserTransactionHistoryFragment extends Fragment {
         requestQueue.add(postRequest);
 
     }
-
-    private RecyclerView.RecyclerListener mRecycleListener = new RecyclerView.RecyclerListener() {
-
-        @Override
-        public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            UserTranscationHistoryAdapter.ViewHolder mapHolder = ( UserTranscationHistoryAdapter.ViewHolder ) holder;
-            if (mapHolder != null && mapHolder.map != null) {
-                // Clear the map and free up resources by changing the map type to none.
-                // Also reset the map when it gets reattached to layout, so the previous map would
-                // not be displayed.
-                mapHolder.map.clear();
-                mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
-            }
-        }
-    };
 
 }
