@@ -246,6 +246,8 @@ public class AddBankAccountActivity extends AppCompatActivity {
 
                         String date = dayOfMonth + "-" + list_of_count + "-" + year;
                         str_dob = year + "/" + list_of_count + "/" + dayOfMonth;
+
+
                         Log.e("DateFormatChange", str_dob);
                         et_dob.setText(str_dob);
 

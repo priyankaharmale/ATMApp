@@ -44,7 +44,7 @@ import java.util.Map;
 
 public class AgentBarcodeScanActivity extends AppCompatActivity {
     ImageView iv_barcode, iv_dollor, iv_share, iv_back;
-    String barcode, businessName, address, request_id,agentId;
+    String barcode, businessName, address, request_id, agentId;
     String image, user_id;
     Bitmap ImageBitmap;
     Button btn_cancletrans;
@@ -67,7 +67,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         address = intent.getStringExtra("address");
         businessName = intent.getStringExtra("businessName");
         request_id = intent.getStringExtra("request_id");
-        agentId= intent.getStringExtra("agentId");
+        agentId = intent.getStringExtra("agentId");
         iv_share = findViewById(R.id.iv_share);
         iv_barcode = findViewById(R.id.iv_barcode);
         iv_dollor = findViewById(R.id.iv_dollor);
@@ -92,7 +92,24 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
+                builder.setMessage("Are you sure you want to cancle the transaction?")
+                        .setCancelable(false).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                cancelTranscation(request_id);
+
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
         final Handler refreshHandler = new Handler();
@@ -207,7 +224,11 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-                                                onBackPressed();
+                                                //onBackPressed();
+                                                Intent intent = new Intent(AgentBarcodeScanActivity.this, AgentDetailsActivity.class);
+                                                intent.putExtra("agentId", agentId);
+                                                startActivity(intent);
+                                                finish();
                                             }
                                         });
                                 AlertDialog alert = builder.create();
@@ -261,7 +282,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
     }
 
     private void successTranscation(final String request_id) {
-       loadingDialog.show();
+        loadingDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConstant.API_SUCCESS_TRANSACTION,
                 new Response.Listener<String>() {
@@ -281,7 +302,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
                                 message = j.getString("message");
                                 Intent intent = new Intent(AgentBarcodeScanActivity.this, SuccessfultransActivity.class);
                                 intent.putExtra("request_id", request_id);
-                                intent.putExtra("agentId",agentId);
+                                intent.putExtra("agentId", agentId);
                                 startActivity(intent);
                                 finish();
                               /*  AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
@@ -352,4 +373,26 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
+    @Override
+    public void onBackPressed() {
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
+        builder.setMessage("Are you sure you want to cancle the transaction?")
+                .setCancelable(false).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        })
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        cancelTranscation(request_id);
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 }

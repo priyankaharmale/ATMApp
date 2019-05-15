@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ATMApp</string>
+    <string name="app_name">ATM App</string>
     <string name="str_atm">ATMPRO</string>
     <string name="str_virtul">YOUR VIRTUAL ATM NETWORK</string>
     <string name="str_terms">Terms and Conditions</string>

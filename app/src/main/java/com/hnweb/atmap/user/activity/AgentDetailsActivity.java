@@ -282,6 +282,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     intent.putExtra("address", address);
                                     intent.putExtra("request_id", request_id);
                                     intent.putExtra("agentId",agentId);
+
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     System.out.println("jsonexeption" + e.toString());
@@ -365,7 +366,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ATM App");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Click here to Download the App \n ");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Click here to Download the App \n https://drive.google.com/open?id=1blM2NwyD98U39apsGqIRdamJB0zTuykb");
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 

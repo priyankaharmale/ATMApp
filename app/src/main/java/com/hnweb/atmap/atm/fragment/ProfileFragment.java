@@ -751,13 +751,34 @@ loadingDialog.show();
                                 String open_time = jsonObject.getString("open_time");
                                 String close_time = jsonObject.getString("close_time");
 
-                                 et_businessnmae.setText(business_name);
+                                if(business_name.equalsIgnoreCase("null") || business_name==null || business_name.equalsIgnoreCase(""))
+                                {
+                                    et_businessnmae.setText("");
+                                }else
+                                {
+                                    et_businessnmae.setText(business_name);
+                                }
+                                if(close_time.equalsIgnoreCase("null") || close_time==null || close_time.equalsIgnoreCase(""))
+                                {
+                                    et_closetime.setText("");
+                                }else
+                                {
+                                    et_closetime.setText(close_time);
+                                }
+
+                                if(open_time.equalsIgnoreCase("null") || open_time==null || open_time.equalsIgnoreCase(""))
+                                {
+                                    et_opentime.setText("");
+                                }else
+                                {
+                                    et_opentime.setText(open_time);
+                                }
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
                                 locationAutocompleteFragment.setText(customer_address);
                                 et_fullname.setText(customer_name);
-                                et_closetime.setText(close_time);
-                                et_opentime.setText(open_time);
+
+
 
                                 if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null")) {
                                     Glide.with(getActivity())

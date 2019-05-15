@@ -49,8 +49,6 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
     private static Context context;
 
 
-
-
     public UserTranscationHistoryAdapter(final List<User> data) {
         this.data = data;
 
@@ -200,8 +198,6 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         }
 
 
-
-
     }
 
     private void onClickButton(final ExpandableLayout expandableLayout) {
@@ -213,7 +209,7 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         return data.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder  implements OnMapReadyCallback{
+    public class ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
         public TextView tv_date, tv_hotelname, tv_time, tv_user_name, tv_status, tv_address;
         private SparseBooleanArray expandState = new SparseBooleanArray();
         public ImageView iv_arrow, iv_doller, iv_check;
@@ -263,20 +259,26 @@ public class UserTranscationHistoryAdapter extends RecyclerView.Adapter<UserTran
         private void setMapLocation() {
             if (map == null) return;
 
-            User data = (User) mMapView.getTag();
+            User data = ( User ) mMapView.getTag();
             if (data == null) return;
 
-            Double latitude = Double.valueOf(data.getCustomer_lat());
-            Double longitude = Double.valueOf(data.getCustomer_long());
+            if (data.getCustomer_lat() == null || data.getCustomer_lat().equalsIgnoreCase("null")|| data.getCustomer_lat().equalsIgnoreCase("")) {
 
-            LatLng lati_long_position = new LatLng(latitude, longitude);
+            } else {
+                Double latitude = Double.valueOf(data.getCustomer_lat());
+                Double longitude = Double.valueOf(data.getCustomer_long());
+                LatLng lati_long_position = new LatLng(latitude, longitude);
 
-            // Add a marker for this item and set the camera
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lati_long_position, 100f));
-            map.addMarker(new MarkerOptions().position(lati_long_position));
+                // Add a marker for this item and set the camera
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(lati_long_position, 100f));
+                map.addMarker(new MarkerOptions().position(lati_long_position));
 
-            // Set the map type back to normal.
-            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                // Set the map type back to normal.
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+
+
+
         }
 
         private void bindView(int pos) {

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -47,6 +48,7 @@ public class RequestMoneyFragment extends Fragment {
     ArrayList<User> users;
     SharedPreferences prefs;
     String user_id;
+    TextView tv_nodata;
     RequestMoneyAdapter requestMoneyAdapter;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class RequestMoneyFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = new LoadingDialog(getActivity());
+        tv_nodata= view.findViewById(R.id.tv_nodata);
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
         final Handler refreshHandler = new Handler();
@@ -97,6 +100,8 @@ public class RequestMoneyFragment extends Fragment {
                             int message_code = j.getInt("message_code");
                             String message = j.getString("message");
                             if (message_code == 1) {
+                                tv_nodata.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 final JSONArray jsonArrayRow = j.getJSONArray("detail");
                                 loadingDialog.dismiss();
                                 users = new ArrayList<User>();
@@ -128,8 +133,10 @@ public class RequestMoneyFragment extends Fragment {
 
                                 }
                             } else {
+                                tv_nodata.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                                 message = j.getString("message");
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                             /*   AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 builder.setMessage(message)
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -137,7 +144,7 @@ public class RequestMoneyFragment extends Fragment {
                                             }
                                         });
                                 AlertDialog alert = builder.create();
-                                alert.show();
+                                alert.show();*/
                             }
                             if (loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();

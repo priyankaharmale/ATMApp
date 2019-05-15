@@ -10,19 +10,31 @@
         android:background="@color/colororange">
 
         <TextView
+            android:id="@+id/tv_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:id="@+id/tv_header"
             android:text="Request Money"
             android:textAllCaps="true"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
         android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/tv_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No Request Found"
+        android:textAllCaps="false"
+        android:textColor="@color/coloBlack"
+        android:textSize="@dimen/text_size_25sp" />
 
 </LinearLayout>

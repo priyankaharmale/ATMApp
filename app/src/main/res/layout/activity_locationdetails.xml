@@ -19,12 +19,12 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="@dimen/dimens_5dp"
                 android:padding="@dimen/dimens_5dp"
-                android:id="@+id/iv_back"
                 android:src="@drawable/arrow_icon"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_size_16sp" />
@@ -56,9 +56,9 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/iv_imgae"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:id="@+id/iv_imgae"
                 android:src="@drawable/no_img" />
 
             <LinearLayout
@@ -81,19 +81,19 @@
                     android:textStyle="bold" />
 
                 <ImageView
+                    android:id="@+id/iv_fav"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimens_10dp"
                     android:layout_weight="0.1"
-                    android:id="@+id/iv_fav"
                     android:src="@drawable/unfavorite_icon" />
 
                 <ImageView
+                    android:id="@+id/iv_share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimens_10dp"
                     android:layout_weight="0.1"
-                    android:id="@+id/iv_share"
                     android:src="@drawable/share_icon" />
             </LinearLayout>
 
@@ -101,18 +101,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimens_10dp"
-
                 android:text="Restaurant and Bar"
                 android:textColor="@color/coloBlack"
-                android:textSize="@dimen/text_size_12sp" />
+                android:textSize="@dimen/text_size_12sp"
+                android:visibility="gone" />
 
             <RatingBar
                 style="?android:attr/ratingBarStyleSmall"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginLeft="@dimen/dimens_10dp"
+
+                android:layout_marginTop="@dimen/dimens_10dp"
                 android:numStars="5"
                 android:rating="3"
                 android:stepSize="0.5" />
@@ -210,19 +210,20 @@
                     android:textSize="@dimen/text_size_14sp" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
                     android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                 </android.support.v7.widget.RecyclerView>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dimens_20dp"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -275,10 +276,10 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btn_strtwithdraw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimens_10dp"
-                android:id="@+id/btn_strtwithdraw"
                 android:background="@drawable/start_withdrawal_button_bg"
                 android:text="Start Withdrawal" />
         </LinearLayout>

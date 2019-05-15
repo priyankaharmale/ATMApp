@@ -193,7 +193,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     params.put(AppConstant.KEY_PHONE, phoneNo);
                     params.put(AppConstant.KEY_PASSWORD, password);
                     params.put(AppConstant.KEY_USERTYPE, userType);
-                    params.put(AppConstant.KEY_ADDRESS, "Test");
+                    params.put(AppConstant.KEY_ADDRESS, " ");
                 } catch (Exception e) {
                     System.out.println("error" + e.toString());
                 }
