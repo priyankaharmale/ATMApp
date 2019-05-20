@@ -2,12 +2,20 @@ package com.hnweb.atmap.user.bo;
 
 public class Agent {
 
-    String customer_id,customer_name,customer_address,customer_mobile,customer_status,user_type,customer_email,
+    String customer_id,customer_name,customer_address,customer_mobile,customer_status,user_type,customer_email,ratting,
             customer_password,customer_profile_pic,customer_lat,customer_long,device_token,device_type,customer_bank_name,
             customer_acc_num,customer_ssn,router_number,business_name,open_time,close_time,created_on,customer_created_at,updated_at;
 
     public String getCustomer_id() {
         return customer_id;
+    }
+
+    public String getRatting() {
+        return ratting;
+    }
+
+    public void setRatting(String ratting) {
+        this.ratting = ratting;
     }
 
     public void setCustomer_id(String customer_id) {

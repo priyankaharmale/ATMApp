@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class RequestMoneyDetailsActivity extends AppCompatActivity {
     TextView tv_user_name, tv_requesttime, tv_requestdate;
-    String name, requesttime, requestdate, request_id, user_id;
+    String name, requesttime, requestdate, request_id, user_id,request_user_id;
     Toolbar toolbar;
     ImageView iv_back;
     EditText et_barcode;
@@ -61,6 +61,7 @@ public class RequestMoneyDetailsActivity extends AppCompatActivity {
         requesttime = intent.getStringExtra("requesttime");
         requestdate = intent.getStringExtra("requestdate");
         request_id = intent.getStringExtra("request_id");
+        request_user_id=intent.getStringExtra("request_user_id");
         tv_user_name.setText(name);
         tv_requesttime.setText(requesttime);
         tv_requestdate.setText(requestdate);
@@ -78,6 +79,7 @@ public class RequestMoneyDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent1 = new Intent(RequestMoneyDetailsActivity.this, ScannedBarcodeActivity.class);
                 intent1.putExtra("request_id", request_id);
+                intent1.putExtra("request_user_id",request_user_id);
                 startActivity(intent1);
             }
         });
@@ -160,7 +162,7 @@ public class RequestMoneyDetailsActivity extends AppCompatActivity {
                 try {
                     params.put("barcode_id", barcode);
                     params.put("request_id", request_id);
-                    params.put("id", user_id);
+                    params.put("id", request_user_id);
 
                 } catch (Exception e) {
                     System.out.println("error" + e.toString());

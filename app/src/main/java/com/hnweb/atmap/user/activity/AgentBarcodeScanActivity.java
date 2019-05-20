@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,13 +45,14 @@ import java.util.Map;
 
 public class AgentBarcodeScanActivity extends AppCompatActivity {
     ImageView iv_barcode, iv_dollor, iv_share, iv_back;
-    String barcode, businessName, address, request_id, agentId;
+    String barcode, businessName, address, request_id, agentId, ratings;
     String image, user_id;
     Bitmap ImageBitmap;
     Button btn_cancletrans;
     LoadingDialog loadingDialog;
     TextView tv_hotelname, tv_address, tv_barcodeNo;
     SharedPreferences prefs;
+    RatingBar ratingBar;
 
     @SuppressLint("NewApi")
     @Override
@@ -61,6 +63,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         user_id = prefs.getString(AppConstant.KEY_ID, null);
 
         loadingDialog = new LoadingDialog(this);
+        ratingBar = findViewById(R.id.ratingBar);
         Intent intent = getIntent();
         barcode = intent.getStringExtra("barcode");
         image = intent.getStringExtra("image");
@@ -68,6 +71,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         businessName = intent.getStringExtra("businessName");
         request_id = intent.getStringExtra("request_id");
         agentId = intent.getStringExtra("agentId");
+        ratings = intent.getStringExtra("ratings");
         iv_share = findViewById(R.id.iv_share);
         iv_barcode = findViewById(R.id.iv_barcode);
         iv_dollor = findViewById(R.id.iv_dollor);
@@ -81,7 +85,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
         tv_barcodeNo.setText(barcode);
         tv_address.setText(address);
         tv_hotelname.setText(businessName);
-
+        ratingBar.setRating(Float.parseFloat(ratings));
         iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -318,7 +322,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
 
                             } else {
                                 message = j.getString("message");
-                                AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
+                              /*  AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
                                 builder.setMessage(message)
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -326,7 +330,7 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
                                             }
                                         });
                                 AlertDialog alert = builder.create();
-                                alert.show();
+                                alert.show();*/
                             }
                         } catch (JSONException e) {
                             System.out.println("jsonexeption" + e.toString());

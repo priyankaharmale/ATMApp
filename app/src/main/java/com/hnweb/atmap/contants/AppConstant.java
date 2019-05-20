@@ -112,6 +112,10 @@ public class AppConstant {
     public static final String API_SUBREVIEWRATING = BASE_URL + "rate_api";
 
 
+    /*=================================================ADD USER BANK ACC=========================================================*/
+    public static final String API_ADDUSERBANKACC = BASE_URL + "add_card_details";
+
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);

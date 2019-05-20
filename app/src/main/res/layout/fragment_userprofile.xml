@@ -80,13 +80,6 @@
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_size_16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimens_5dp"
-                android:text="@string/str_add"
-
-                android:textSize="@dimen/text_size_16sp" />
 
             <!-- <EditText
                  android:id="@+id/et_address"
@@ -101,11 +94,7 @@
                  android:textSize="@dimen/text_size_16sp" />-->
 
 
-            <fragment
-                android:id="@+id/place_autocomplete_fragment"
-                android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -163,135 +152,7 @@
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_size_16sp" />
 
-            <TextView
-                android:id="@+id/cardDetailsPayMoney_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Card Number"
-                android:layout_margin="@dimen/dimens_5dp"
 
-                android:textSize="15sp"
-
-                />
-
-            <EditText
-                android:id="@+id/et_cardNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="NA"
-                android:layout_margin="@dimen/dimens_5dp"
-
-                android:textSize="15sp"
-                android:textColor="@color/coloBlack"
-
-                android:padding="10dp"
-                android:inputType="number"
-                android:maxLength="19"
-                />
-
-            <LinearLayout
-                android:id="@+id/expiryMonthYearDepositeMoney_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimens_5dp"
-
-                android:orientation="horizontal"
-                android:weightSum="2"
-                >
-
-                <LinearLayout
-                    android:id="@+id/expiryMonthDepositeMoney_ll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    android:layout_weight="1"
-                    >
-
-                    <TextView
-                        android:id="@+id/expiryMonthDepositeMoney_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Expiration Month"
-                        android:textSize="15sp"
-                        />
-
-                    />
-
-                    <EditText
-                        android:id="@+id/et_expirymonth"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="MM"
-                        android:textSize="15sp"
-                        android:textColor="@color/coloBlack"
-
-
-                        android:padding="10dp"
-                        android:inputType="number"
-                        android:focusableInTouchMode="false"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/expiryYearDepositeMoney_ll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    android:layout_weight="1"
-                    >
-                    <TextView
-                        android:id="@+id/expiryYearDepositeMoney_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Expiration Year"
-                        android:textSize="15sp"
-
-
-                        />
-
-                    <EditText
-                        android:id="@+id/et_expiryyear"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="YYYY"
-                        android:textSize="15sp"
-                        android:textColor="@color/coloBlack"
-
-                        android:padding="10dp"
-                        android:inputType="number"
-                        android:focusableInTouchMode="false"
-                        />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/cvvDepositeMoneyHeading_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CVV"
-                android:textSize="15sp"
-                android:layout_margin="5dp"
-                />
-
-            <EditText
-                android:id="@+id/et_cvv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="NA"
-                android:textSize="15sp"
-                android:textColor="@color/coloBlack"
-
-                android:padding="10dp"
-                android:layout_margin="5dp"
-
-                android:maxLength="3"
-                android:inputType="numberPassword"
-                />
             <Button
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"

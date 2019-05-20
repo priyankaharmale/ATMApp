@@ -98,10 +98,9 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
     public static final int REQUEST_CAMERA = 5;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
     SharedPreferences prefs;
-    EditText et_fullname, et_mobilno, et_email, et_cardNumber, et_cvv, et_expiryyear, et_expirymonth, et_dob;
+    EditText et_fullname, et_mobilno, et_email, et_dob;
     String fullname, mobilno, email, str_dob;
     String user_id;
-    SupportPlaceAutocompleteFragment locationAutocompleteFragment;
 
     @Nullable
     @Override
@@ -112,19 +111,18 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         et_fullname = view.findViewById(R.id.et_fullname);
         et_mobilno = view.findViewById(R.id.et_mobilno);
         et_email = view.findViewById(R.id.et_email);
-        et_cardNumber = view.findViewById(R.id.et_cardNumber);
+
         iv_profilePic = view.findViewById(R.id.iv_profilePic);
         iv_edit = view.findViewById(R.id.profile_image_photoupload);
+
         btn_update = view.findViewById(R.id.btn_update);
-        et_cvv = view.findViewById(R.id.et_cvv);
-        et_expiryyear = view.findViewById(R.id.et_expiryyear);
+
+
         et_dob = view.findViewById(R.id.et_dob);
-        et_expirymonth = view.findViewById(R.id.et_expirymonth);
 
         onCallBack = this;
         loadingDialog = new LoadingDialog(getActivity());
-        et_expiryyear.setOnClickListener(this);
-        et_expirymonth.setOnClickListener(this);
+
         iv_edit.setOnClickListener(this);
         btn_update.setOnClickListener(this);
         et_dob.setOnClickListener(this);
@@ -133,83 +131,12 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         user_id = prefs.getString(AppConstant.KEY_ID, null);
 
 
-        try {
-            locationAutocompleteFragment = ( SupportPlaceAutocompleteFragment )
-                    getChildFragmentManager()
-                            .findFragmentById(R.id.place_autocomplete_fragment);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                locationAutocompleteFragment.getView().setAutofillHints("Select Church Address");
-            }
 
-            locationAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(Place place) {
-
-                    String value = String.valueOf(latLng);
-                    if (place != null) {
-                        latLng = place.getLatLng();
-                        stringLatitude = String.valueOf(latLng.latitude);
-                        stringLongitude = String.valueOf(latLng.longitude);
-                        Log.d("GETLocation", stringLatitude + " :: " + stringLongitude);
-
-                        getCompleteAddressString(latLng.latitude, latLng.longitude);
-
-                    }
-                }
-
-                @Override
-                public void onError(Status status) {
-                    Toast.makeText(getActivity(), status.toString(), Toast.LENGTH_SHORT).show();
-                    Log.d("ErrorLocation", status.toString());
-
-                }
-            });
-
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-            Log.v("exgfd", "" + ex.toString());
-
-        }
 
 
         getUserDetails();
 
-        et_cardNumber.addTextChangedListener(new TextWatcher() {
-            private static final char space = ' ';
-            boolean isDelete = true;
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (before == 0)
-                    isDelete = false;
-                else
-                    isDelete = true;
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                String source = editable.toString();
-                int length = source.length();
-
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(source);
-
-                if (length > 0 && length % 5 == 0) {
-                    if (isDelete)
-                        stringBuilder.deleteCharAt(length - 1);
-                    else
-                        stringBuilder.insert(length - 1, " ");
-
-                    et_cardNumber.setText(stringBuilder);
-                    et_cardNumber.setSelection(et_cardNumber.getText().length());
-                }
-            }
-        });
         return view;
     }
 
@@ -408,15 +335,6 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
             ret = false;
         if (!Validations.hasText(et_dob, "Please Select Date of Birth"))
             ret = false;
-        if (!Validations.hasText(et_cardNumber, "Please Enter Card Number"))
-            ret = false;
-        if (!Validations.hasText(et_expirymonth, "Please Select Expiry Month"))
-            ret = false;
-        if (!Validations.hasText(et_expiryyear, "Please Select Expiry Year"))
-            ret = false;
-        if (!Validations.hasText(et_cvv, "Please Enter CVV"))
-            ret = false;
-
         return ret;
     }
 
@@ -442,17 +360,15 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         Stringparams.put("Accept", "application/json");
         Stringparams.put("Content-Type", "application/json");
         Stringparams.put("name", fullname);
-        Stringparams.put("address", strAdd);
+       // Stringparams.put("address", strAdd);
         Stringparams.put("email", email);
         Stringparams.put("dob", str_dob);
-        Stringparams.put("cus_lat", stringLatitude);
+      /*  Stringparams.put("cus_lat", stringLatitude);
         Stringparams.put("cus_long", stringLongitude);
-        Stringparams.put("mobile_no", mobilno);
+     */
+      Stringparams.put("mobile_no", mobilno);
         Stringparams.put("customer_type", "1");
-        Stringparams.put("cardnumber", et_cardNumber.getText().toString());
-        Stringparams.put("exp_month", et_expirymonth.getText().toString());
-        Stringparams.put("exp_year", et_expiryyear.getText().toString());
-        Stringparams.put("cvc", et_cvv.getText().toString());
+
         Stringparams.put("id", user_id);
         Log.e("params", Stringparams.toString());
 
@@ -655,7 +571,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
 
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
-                                locationAutocompleteFragment.setText(customer_address);
+                                //locationAutocompleteFragment.setText(customer_address);
                                 et_fullname.setText(customer_name);
 
                                 if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null")) {
@@ -740,46 +656,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         return strAdd;
     }
 
-    public void dialogYear() {
-        Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.dialog_month);
-        ListView lv = ( ListView ) dialog.findViewById(R.id.lv);
-        dialog.setCancelable(true);
-        dialog.setTitle("Year");
-        ArrayList<String> years = new ArrayList<String>();
-        int thisYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = thisYear; i <= 2060; i++) {
-            years.add(Integer.toString(i));
-        }
-        YearAdaptor adapter = new YearAdaptor(getActivity(), years, onCallBack, dialog);
-        lv.setAdapter(adapter);
 
-        dialog.show();
-    }
-
-    public void dialogMonth() {
-        Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.dialog_month);
-        ListView lv = ( ListView ) dialog.findViewById(R.id.lv);
-        dialog.setCancelable(true);
-        dialog.setTitle("Month");
-        ArrayList<String> years = new ArrayList<String>();
-        years.add("01");
-        years.add("02");
-        years.add("03");
-        years.add("04");
-        years.add("05");
-        years.add("06");
-        years.add("07");
-        years.add("08");
-        years.add("09");
-        years.add("10");
-        years.add("11");
-        years.add("12");
-        MonthAdaptor adapter = new MonthAdaptor(getActivity(), years, onCallBack, dialog);
-        lv.setAdapter(adapter);
-        dialog.show();
-    }
 
     @Override
     public void selctedImge(String amount, String image) {
@@ -788,12 +665,12 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
 
     @Override
     public void callbackYear(String count) {
-        et_expiryyear.setText(count);
+
     }
 
     @Override
     public void callbackMonthe(String month) {
-        et_expirymonth.setText(month);
+
 
     }
 
@@ -805,12 +682,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.et_expiryyear:
-                dialogYear();
-                break;
-            case R.id.et_expirymonth:
-                dialogMonth();
-                break;
+
             case R.id.profile_image_photoupload:
                 showPictureDialog();
                 break;
@@ -826,6 +698,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
                 break;
             case R.id.et_dob:
                 getDOBPicker();
+                break;
         }
 
     }

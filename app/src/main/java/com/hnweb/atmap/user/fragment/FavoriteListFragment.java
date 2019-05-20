@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -28,6 +29,7 @@ import com.hnweb.atmap.R;
 import com.hnweb.atmap.atm.adaptor.RequestMoneyAdapter;
 import com.hnweb.atmap.atm.bo.User;
 import com.hnweb.atmap.contants.AppConstant;
+import com.hnweb.atmap.inteface.OnCallBack;
 import com.hnweb.atmap.user.adaptor.FavoriteAdapter;
 import com.hnweb.atmap.utils.LoadingDialog;
 
@@ -41,14 +43,16 @@ import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class FavoriteListFragment extends Fragment {
+public class FavoriteListFragment extends Fragment implements OnCallBack {
     RecyclerView recyclerView;
     LoadingDialog loadingDialog;
     ArrayList<User> users;
     SharedPreferences prefs;
     String user_id;
+    OnCallBack onCallBack;
     FavoriteAdapter requestMoneyAdapter;
     TextView tv_header;
+
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -57,8 +61,9 @@ public class FavoriteListFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = new LoadingDialog(getActivity());
-        tv_header=view.findViewById(R.id.tv_header);
+        tv_header = view.findViewById(R.id.tv_header);
         tv_header.setText("Favourite");
+        onCallBack = this;
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
@@ -93,13 +98,12 @@ public class FavoriteListFragment extends Fragment {
                                         JSONObject jsonObjectpostion = jsonArrayRow.getJSONObject(k);
                                         agent.setCustomer_name(jsonObjectpostion.getString("customer_name"));
                                         String userPic_url = jsonObjectpostion.getString("customer_profile_pic");
-
-                                      /*  agent.setCustomer_lat(jsonObjectpostion.getString("customer_lat"));
-                                        agent.setCustomer_long(jsonObjectpostion.getString("customer_long"));
-                                     */   agent.setCustomer_address(jsonObjectpostion.getString("customer_address"));
+                                        agent.setRatting(jsonObjectpostion.getString("ratting"));
+                                        agent.setAgent_id(jsonObjectpostion.getString("agent_id"));
+                                        agent.setCustomer_address(jsonObjectpostion.getString("customer_address"));
                                         users.add(agent);
                                     }
-                                    requestMoneyAdapter = new FavoriteAdapter(users, getActivity());
+                                    requestMoneyAdapter = new FavoriteAdapter(users, getActivity(), onCallBack);
                                     recyclerView.setAdapter(requestMoneyAdapter);
 
 
@@ -160,4 +164,23 @@ public class FavoriteListFragment extends Fragment {
 
     }
 
+    @Override
+    public void selctedImge(String amount, String image) {
+
+    }
+
+    @Override
+    public void callbackYear(String count) {
+
+    }
+
+    @Override
+    public void callbackMonthe(String month) {
+
+    }
+
+    @Override
+    public void refresh() {
+        getFavoList();
+    }
 }

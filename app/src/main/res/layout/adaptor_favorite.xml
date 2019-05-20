@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -29,7 +29,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:orientation="vertical">
 
                 <TextView
@@ -70,9 +70,14 @@
 
             </LinearLayout>
 
-
+            <ImageView
+                android:id="@+id/iv_fav"
+                android:layout_width="@dimen/text_20"
+                android:layout_height="@dimen/dimens_30dp"
+                android:layout_weight="0.2"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:src="@drawable/like" />
         </LinearLayout>
-
 
     </LinearLayout>
 

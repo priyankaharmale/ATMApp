@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -87,7 +92,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 @SuppressLint("ValidFragment")
-public class MapViewFragment extends Fragment implements  OnMarkerClickListener, OnMapReadyCallback {
+public class MapViewFragment extends Fragment implements OnMarkerClickListener, OnMapReadyCallback {
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -116,6 +121,8 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
     private Button infoButton1, infoButton2;
     MapWrapperLayout mapWrapperLayout;
     private ImageView iv_cancle;
+    LatLng latLng;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,7 +147,7 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
         fragmentManager = getFragmentManager();
         getCurrentLocation = "0";
 
-        mapWrapperLayout = ( MapWrapperLayout ) view.findViewById(R.id.map_relative_layout);
+        mapWrapperLayout = (MapWrapperLayout) view.findViewById(R.id.map_relative_layout);
 
         loadingDialog = new LoadingDialog(getActivity());
 
@@ -163,8 +170,8 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
 
         try {
             // Get the button view
-            View locationButton = (( View ) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
-            RelativeLayout.LayoutParams rlp = ( RelativeLayout.LayoutParams ) locationButton.getLayoutParams();
+            View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             // position on right bottom
             rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
@@ -173,16 +180,48 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
             ex.printStackTrace();
         }
         initViewById(view);
-
+        fetchLocationData();
 
         connectionDetector = new ConnectionDetector(getActivity());
         if (connectionDetector.isConnectingToInternet()) {
-           /* String current_latitude = String.valueOf(WebsServiceURLUser.latitude);
-            String current_longitude = String.valueOf(WebsServiceURLUser.longitude);
-         */
-            getMapList();
+         getMapList(latitude,longitude);
         } else {
             Toast.makeText(getActivity(), "No Internet Connection, Please try Again!!", Toast.LENGTH_SHORT).show();
+        }
+
+
+        try {
+
+            SupportPlaceAutocompleteFragment autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+          //  autocompleteFragment.setText(current_address);
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+
+                    String value = String.valueOf(latLng);
+                    if (place != null) {
+                        latLng = place.getLatLng();
+                        Log.d("GETLocation", latLng.latitude + " :: " + latLng.longitude);
+                        Log.d("LatitudeLongitude", String.valueOf(latLng));
+                        getCurrentLocation = "1";
+                        getMapList(latLng.latitude, latLng.longitude);
+                      /*  latitude = Double.parseDouble(mStringLatitude);
+                        longitude = Double.parseDouble(mStringLongitude);
+
+                      */  //Toast.makeText(getActivity(), mStringLatitude + "::" + "\n" + mStringLongitude, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+                @Override
+                public void onError(Status status) {
+                    Toast.makeText(getActivity(), status.toString(), Toast.LENGTH_SHORT).show();
+                    Log.d("ErrorLocation", status.toString());
+
+                }
+            });
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
         }
 
 
@@ -259,12 +298,14 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
         if (myLocationListener.canGetLocation()) {
             latitude = myLocationListener.getLatitude();
             longitude = myLocationListener.getLongitude();
+            Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+
 
         } else {
             myLocationListener.showSettingsAlert();
             latitude = myLocationListener.getLatitude();
             longitude = myLocationListener.getLongitude();
-            //Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         }
 
         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -291,9 +332,7 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
     }
 
 
-
-
-    private void getMapList() {
+    private void  getMapList(final double latitude, final double longitude) {
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_GET_AGENTLIST,
                 new Response.Listener<String>() {
@@ -324,6 +363,7 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
                                         agent.setBusiness_name(jsonObjectpostion.getString("business_name"));
                                         agent.setOpen_time(jsonObjectpostion.getString("open_time"));
                                         agent.setClose_time(jsonObjectpostion.getString("close_time"));
+                                        agent.setRatting(jsonObjectpostion.getString("ratting"));
                                         agent.setCustomer_profile_pic(jsonObjectpostion.getString("customer_profile_pic"));
                                         agentArrayList.add(agent);
 
@@ -378,6 +418,10 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
                 Map<String, String> params = new HashMap<>();
                 // the POST parameters:
                 params.put("id", user_id);
+                params.put("user_lat", String.valueOf(latitude));
+                params.put("user_long", String.valueOf(longitude));
+
+
                 Log.e("Params", params.toString());
                 return params;
             }
@@ -584,19 +628,19 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
         mapWrapperLayout.init(googleMap, getPixelsFromDp(getActivity(), 39 + 20));
         // We want to reuse the info window for all the markers,
         // so let's create only one class member instance
-        this.infoWindow = ( ViewGroup ) getLayoutInflater().inflate(R.layout.snippet_map, null);
+        this.infoWindow = (ViewGroup) getLayoutInflater().inflate(R.layout.snippet_map, null);
 
-        this.infoTitle = ( TextView ) infoWindow.findViewById(R.id.tv_hotelNamefull);
+        this.infoTitle = (TextView) infoWindow.findViewById(R.id.tv_hotelNamefull);
         final TextView tv_churchname = infoWindow.findViewById(R.id.tv_hotelname);
         final TextView tv_opentime = infoWindow.findViewById(R.id.tv_opentime);
         final ImageView iv_profile = infoWindow.findViewById(R.id.iv_profile);
         final TextView tv_hotelNamefull = infoWindow.findViewById(R.id.tv_hotelNamefull);
         this.iv_cancle = infoWindow.findViewById(R.id.iv_cancle);
         final TextView tv_closetime = infoWindow.findViewById(R.id.tv_closetime);
-
+        final RatingBar ratingBar = infoWindow.findViewById(R.id.ratingBar);
         //    this.infoSnippet = (TextView)infoWindow.findViewById(R.id.addressTxt);
-        this.infoButton1 = ( Button ) infoWindow.findViewById(R.id.btn_getdirection);
-        this.infoButton2 = ( Button ) infoWindow.findViewById(R.id.btn_widraw);
+        this.infoButton1 = (Button) infoWindow.findViewById(R.id.btn_getdirection);
+        this.infoButton2 = (Button) infoWindow.findViewById(R.id.btn_widraw);
 
         // Setting custom OnTouchListener which deals with the pressed state
         // so it shows up
@@ -657,6 +701,7 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
                     tv_hotelNamefull.setText(infoWindowData.getBusiness_name());
                     tv_closetime.setText(infoWindowData.getClose_time());
 
+                    ratingBar.setRating(Float.parseFloat(infoWindowData.getRatting()));
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Log.e("Exception", e.getMessage());
@@ -745,7 +790,7 @@ public class MapViewFragment extends Fragment implements  OnMarkerClickListener,
 
     public static int getPixelsFromDp(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return ( int ) (dp * scale + 0.5f);
+        return (int) (dp * scale + 0.5f);
     }
 
 

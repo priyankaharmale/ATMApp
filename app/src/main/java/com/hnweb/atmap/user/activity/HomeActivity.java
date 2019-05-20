@@ -35,6 +35,7 @@ import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.user.fragment.FavoriteListFragment;
 import com.hnweb.atmap.user.fragment.MapViewFragment;
+import com.hnweb.atmap.user.fragment.UserAddBankAccountFragment;
 import com.hnweb.atmap.user.fragment.UserProfileFragment;
 import com.hnweb.atmap.user.fragment.UserTransactionHistoryFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
@@ -81,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_home);
-        toolbar = ( Toolbar ) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         iv_notification = toolbar.findViewById(R.id.iv_notification);
         setSupportActionBar(toolbar);
 
@@ -97,7 +98,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         user_name = prefs.getString(AppConstant.KEY_NAME, null);
         user_email = prefs.getString(AppConstant.KEY_EMAIL, null);
 
-        drawer = ( DrawerLayout ) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -280,7 +281,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = ( DrawerLayout ) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -317,7 +318,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem menuItem = menu.findItem(R.id.action_notification);
 
         View actionView = MenuItemCompat.getActionView(menuItem);
-        textCartItemCount = ( TextView ) actionView.findViewById(R.id.cart_badge);
+        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -366,6 +367,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragment = new UserTransactionHistoryFragment();
         } else if (id == R.id.nav_favorite) {
             fragment = new FavoriteListFragment();
+        } else if (id == R.id.nav_bankaccount) {
+            fragment = new UserAddBankAccountFragment();
         }
 
 
@@ -375,7 +378,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).addToBackStack(null).commit();
         }
 
-        DrawerLayout drawer = ( DrawerLayout ) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

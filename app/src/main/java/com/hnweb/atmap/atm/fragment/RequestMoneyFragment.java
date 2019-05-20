@@ -83,16 +83,16 @@ public class RequestMoneyFragment extends Fragment {
 
 
     private void getRequestMoneyList() {
-        loadingDialog.show();
+       // loadingDialog.show();
         StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_REQUESTMONEYLIST,
                 new Response.Listener<String>() {
 
                     @Override
                     public void onResponse(String response) {
-                        if (loadingDialog.isShowing()) {
+                      /*  if (loadingDialog.isShowing()) {
                             loadingDialog.dismiss();
                         }
-
+*/
                         Log.i("Response", "ServiceList= " + response);
 
                         try {

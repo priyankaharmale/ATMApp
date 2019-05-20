@@ -3,6 +3,7 @@ package com.hnweb.atmap.atm.bo;
 public class User {
     String customer_name;
     String hotelName;
+    String agent_id;
     String customer_address;
 
     public String getHotelName() {
@@ -13,13 +14,31 @@ public class User {
         this.hotelName = hotelName;
     }
 
+    public String getAgent_id() {
+        return agent_id;
+    }
+
+    public void setAgent_id(String agent_id) {
+        this.agent_id = agent_id;
+    }
+
     String customer_lat;
     String customer_long;
     String request_user_id;
     String request_amount;
+
+    public String getRatting() {
+        return ratting;
+    }
+
+    public void setRatting(String ratting) {
+        this.ratting = ratting;
+    }
+
     String request_status;
     String request_barcode;
     String request_time;
+    String ratting;
 
     public String getCustomer_profile_pic() {
         return customer_profile_pic;

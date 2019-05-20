@@ -75,7 +75,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     private Uri imageUri;
     private static final int CAMERA_REQUEST = 101;
     Bitmap ImageBitmap;
-    String palateid, user_id, request_id;
+    String palateid, user_id, request_id,request_user_id;
     LoadingDialog loadingDialog;
     SharedPreferences prefs;
 
@@ -87,6 +87,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         prefs = getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
         Intent intent = getIntent();
+        request_user_id=intent.getStringExtra("request_user_id");
         request_id = intent.getStringExtra("request_id");
         initViews();
     }
@@ -358,7 +359,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                 try {
                     params.put("barcode_id", barcode);
                     params.put("request_id", request_id);
-                    params.put("id", user_id);
+                    params.put("id", request_user_id);
 
                 } catch (Exception e) {
                     System.out.println("error" + e.toString());

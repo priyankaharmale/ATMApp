@@ -100,8 +100,8 @@
                         android:textSize="@dimen/text_size_12sp" />
 
                     <RatingBar
+                        android:id="@+id/ratingBar"
                         style="?android:attr/ratingBarStyleSmall"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_10dp"
@@ -119,10 +119,10 @@
                     android:src="@drawable/favorite_icon" />
 
                 <ImageView
+                    android:id="@+id/iv_share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_20dp"
-android:id="@+id/iv_share"
 
                     android:layout_weight="0.125"
                     android:src="@drawable/share_icon" />
@@ -193,20 +193,20 @@ android:id="@+id/iv_share"
                 android:src="@drawable/ten_usd" />
 
             <TextView
+                android:id="@+id/tv_barcodeNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Barode "
-                android:id="@+id/tv_barcodeNo"
                 android:textColor="@color/coloBlack"
                 android:textSize="@dimen/text_size_14sp" />
 
 
             <Button
+                android:id="@+id/btn_cancletrans"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimens_10dp"
-                android:id="@+id/btn_cancletrans"
                 android:background="@drawable/start_withdrawal_button_bg"
                 android:text="Cancle Transaction"
                 android:textColor="@android:color/holo_red_dark" />

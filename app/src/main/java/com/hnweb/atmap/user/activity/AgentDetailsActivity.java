@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +55,8 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
     SharedPreferences prefs;
     String user_id, agentId;
     String stramount = "";
-    String address, businessName, customer_profile_pic, like_status = "";
+    RatingBar ratting;
+    String address, businessName, customer_profile_pic, like_status = "", ratings = "";
     String images;
     ArrayList personImages = new ArrayList<>(Arrays.asList(R.drawable.ten_usd, R.drawable.twenty_usd, R.drawable.forty_usd, R.drawable.sixty_usd, R.drawable.eighty_usd, R.drawable.hundred_usd, R.drawable.two_hundred_usd));
     ArrayList personNames = new ArrayList<>(Arrays.asList("10", "20", "40", "60", "80", "100", "200"));
@@ -68,7 +70,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
         loadingDialog = new LoadingDialog(this);
 
         setContentView(R.layout.activity_locationdetails);
-        toolbar = ( Toolbar ) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         btn_strtwithdraw = findViewById(R.id.btn_strtwithdraw);
         iv_fav = findViewById(R.id.iv_fav);
         tv_hotelName = findViewById(R.id.tv_hotalName);
@@ -78,6 +80,7 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
         tv_address = findViewById(R.id.tv_address);
         iv_share = findViewById(R.id.iv_share);
         iv_imgae = findViewById(R.id.iv_imgae);
+        ratting = findViewById(R.id.ratting);
         Intent intent = getIntent();
         agentId = intent.getStringExtra("agentId");
         prefs = getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
@@ -157,9 +160,11 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     String user_type = jsonObject.getString("user_type");
                                     String opentime = jsonObject.getString("open_time");
                                     String cloasetime = jsonObject.getString("close_time");
+                                    ratings = jsonObject.getString("ratting");
                                     businessName = jsonObject.getString("business_name");
                                     customer_profile_pic = jsonObject.getString("customer_profile_pic");
                                     like_status = jsonObject.getString("like_status");
+                                    ratting.setRating(Float.parseFloat(ratings));
 
                                     if (like_status.equalsIgnoreCase("") || like_status.equalsIgnoreCase("0")) {
                                         iv_fav.setImageResource(R.drawable.unfavorite_icon);
@@ -281,7 +286,8 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     intent.putExtra("businessName", businessName);
                                     intent.putExtra("address", address);
                                     intent.putExtra("request_id", request_id);
-                                    intent.putExtra("agentId",agentId);
+                                    intent.putExtra("agentId", agentId);
+                                    intent.putExtra("ratings", ratings);
 
                                     startActivity(intent);
                                 } catch (JSONException e) {

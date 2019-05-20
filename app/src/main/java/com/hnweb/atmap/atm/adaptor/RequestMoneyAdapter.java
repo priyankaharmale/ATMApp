@@ -147,6 +147,7 @@ public class RequestMoneyAdapter extends RecyclerView.Adapter<RequestMoneyAdapte
                 intent.putExtra("name", puzzleList.get(position).getCustomer_name());
                 intent.putExtra("requestdate", holder.requestdate);
                 intent.putExtra("requesttime", holder.requesttime);
+                intent.putExtra("request_user_id",puzzleList.get(position).getRequest_user_id());
                 intent.putExtra("request_id",puzzleList.get(position).getRequest_id());
                 activity.startActivity(intent);
 
