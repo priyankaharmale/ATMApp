@@ -50,6 +50,7 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 import com.google.android.gms.maps.model.LatLng;
 
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.multipartRequest.MultiPart_Key_Value_Model;
 import com.hnweb.atmap.multipartRequest.MultipartFileUploaderAsync;
@@ -96,6 +97,8 @@ public class ProfileFragment extends Fragment {
     public static final int REQUEST_CAMERA = 5;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
     SharedPreferences prefs;
+    SharedPreferences.Editor editorUser;
+
     EditText et_fullname, et_mobilno, et_email, et_businessnmae, et_opentime, et_closetime;
     String fullname, mobilno, email, bankname, accountNo, ssn, routerNo, businessnmae, opentime, closetime;
     String user_id;
@@ -117,14 +120,16 @@ public class ProfileFragment extends Fragment {
         iv_edit = view.findViewById(R.id.profile_image_photoupload);
         btn_update = view.findViewById(R.id.btn_update);
 
+
         loadingDialog = new LoadingDialog(getActivity());
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
+        editorUser = prefs.edit();
 
 
         try {
-            locationAutocompleteFragment = ( SupportPlaceAutocompleteFragment )
+            locationAutocompleteFragment = (SupportPlaceAutocompleteFragment)
                     getChildFragmentManager()
                             .findFragmentById(R.id.place_autocomplete_fragment);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -441,7 +446,8 @@ public class ProfileFragment extends Fragment {
             ret = false;
         if (!Validations.hasText(et_routerNo, "Please Router Number"))
             ret = false;
-     */   if (!Validations.hasText(et_businessnmae, "Please Enter Business Name"))
+     */
+        if (!Validations.hasText(et_businessnmae, "Please Enter Business Name"))
             ret = false;
         if (!Validations.hasText(et_opentime, "Please Select Open Time"))
             ret = false;
@@ -451,153 +457,6 @@ public class ProfileFragment extends Fragment {
         return ret;
     }
 
-
- /*   private void updateprofile() {
-        loadingDialog.show();
-        StringRequest stringRequest;
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = AppConstant.API_UPDATE_PROFILE;
-
-        stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String object) {
-                        System.out.println("updateprofile" + object);
-                        try {
-                            final JSONObject j = new JSONObject(object);
-                            int message_code = j.getInt("message_code");
-                            String message = j.getString("message");
-                            if (loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
-                            if (message_code == 1) {
-                                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                                builder.setMessage(message)
-                                        .setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-
-                                                getUserDetails();
-
-                                            }
-                                        });
-                                android.support.v7.app.AlertDialog alert = builder.create();
-                                alert.show();
-                            } else {
-                                message = j.getString("message");
-                                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                                builder.setMessage(message)
-                                        .setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                            }
-                                        });
-                                android.support.v7.app.AlertDialog alert = builder.create();
-                                alert.show();
-                            }
-                        } catch (JSONException e) {
-                            System.out.println("jsonexeption" + e.toString());
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("VolleyError" + error.toString());
-                NetworkResponse networkResponse = error.networkResponse;
-                String errorMessage = "Unknown error";
-                if (networkResponse == null) {
-                    if (error.getClass().equals(TimeoutError.class)) {
-                        errorMessage = "Request timeout";
-                    } else if (error.getClass().equals(NoConnectionError.class)) {
-                        errorMessage = "Failed to connect server";
-                    }
-
-                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-
-                    loadingDialog.dismiss();
-
-                } else {
-                    String result = new String(networkResponse.data);
-                    try {
-                        JSONObject response = new JSONObject(result);
-                        String status = response.getString("status");
-                        String message = response.getString("message");
-
-                        Log.e("Error Status", status);
-                        Log.e("Error Message", message);
-
-                        if (networkResponse.statusCode == 404) {
-                            errorMessage = "Resource not found";
-                        } else if (networkResponse.statusCode == 401) {
-                            errorMessage = message + " Please login again";
-                        } else if (networkResponse.statusCode == 400) {
-                            errorMessage = message + " Check your inputs";
-                        } else if (networkResponse.statusCode == 500) {
-                            errorMessage = message + " Something is getting wrong";
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.i("Error", errorMessage);
-                error.printStackTrace();
-
-
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> Stringparams = new HashMap<String, String>();
-
-
-                fullname = et_fullname.getText().toString();
-                bankname = et_bankname.getText().toString();
-                accountNo = et_accountNo.getText().toString();
-                routerNo = et_routerNo.getText().toString();
-                ssn = et_ssn.getText().toString();
-                email = et_email.getText().toString();
-                mobilno = et_mobilno.getText().toString();
-                businessnmae = et_businessnmae.getText().toString();
-                opentime = et_opentime.getText().toString();
-                closetime = et_closetime.getText().toString();
-
-
-                if (camImage == null || camImage.equalsIgnoreCase("")) {
-                } else {
-                    Stringparams.put("img", String.valueOf(camImage));
-                }
-                Stringparams.put("Accept", "application/json");
-                Stringparams.put("Content-Type", "application/json");
-                Stringparams.put("name", fullname);
-                Stringparams.put("address", strAdd);
-                Stringparams.put("dob", str_dob);
-                Stringparams.put("email", email);
-                Stringparams.put("bank_name", bankname);
-                Stringparams.put("bank_account_no", accountNo);
-                Stringparams.put("cus_lat", stringLatitude);
-                Stringparams.put("cus_long", stringLongitude);
-                Stringparams.put("router_no", routerNo);
-                Stringparams.put("ssn_no", ssn);
-                Stringparams.put("mobile_no", mobilno);
-                Stringparams.put("business_name", businessnmae);
-                Stringparams.put("open_time", opentime);
-                Stringparams.put("close_time", closetime);
-                Stringparams.put("id", user_id);
-                Stringparams.put("customer_type", "2");
-                Log.e("params", Stringparams.toString());
-                // System.out.println(params);
-                return Stringparams;
-            }
-        };
-        queue.add(stringRequest);
-        int MY_SOCKET_TIMEOUT_MS=50000;
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                MY_SOCKET_TIMEOUT_MS,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-    }*/
 
     public void updateUserData(String camImage) {
         loadingDialog.show();
@@ -630,18 +489,22 @@ public class ProfileFragment extends Fragment {
         Stringparams.put("Accept", "application/json");
         Stringparams.put("Content-Type", "application/json");
         Stringparams.put("name", fullname);
+
         Stringparams.put("address", strAdd);
+
+
         //Stringparams.put("dob", str_dob);
         Stringparams.put("email", email);
        /* Stringparams.put("bank_name", bankname);
         Stringparams.put("bank_account_no", accountNo);
       */
 
-       Stringparams.put("cus_lat", stringLatitude);
+        Stringparams.put("cus_lat", stringLatitude);
         Stringparams.put("cus_long", stringLongitude);
       /*  Stringparams.put("router_no", routerNo);
         Stringparams.put("ssn_no", ssn);
-   */     Stringparams.put("mobile_no", mobilno);
+   */
+        Stringparams.put("mobile_no", mobilno);
         Stringparams.put("business_name", businessnmae);
         Stringparams.put("open_time", opentime);
         Stringparams.put("close_time", closetime);
@@ -714,7 +577,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserDetails() {
-loadingDialog.show();
+        loadingDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         String url = AppConstant.API_GET_AGENTPROFILE;
@@ -743,41 +606,44 @@ loadingDialog.show();
                                 String customer_mobile = jsonObject.getString("customer_mobile");
                                 String customer_address = jsonObject.getString("customer_address");
                                 String customer_name = jsonObject.getString("customer_name");
-                                String customer_bank_name = jsonObject.getString("customer_bank_name");
-                                String customer_acc_num = jsonObject.getString("customer_acc_num");
-                                String customer_ssn = jsonObject.getString("customer_ssn");
-                                String router_number = jsonObject.getString("router_number");
+                                String user_type = jsonObject.getString("user_type");
                                 String business_name = jsonObject.getString("business_name");
                                 String open_time = jsonObject.getString("open_time");
                                 String close_time = jsonObject.getString("close_time");
 
-                                if(business_name.equalsIgnoreCase("null") || business_name==null || business_name.equalsIgnoreCase(""))
-                                {
+
+                                editorUser.putString(AppConstant.KEY_ID, user_id);
+                                editorUser.putString(AppConstant.KEY_NAME, customer_name);
+                                editorUser.putString(AppConstant.KEY_EMAIL, email);
+                                editorUser.putString(AppConstant.KEY_PHONE, customer_mobile);
+                                editorUser.putString(AppConstant.KEY_USERTYPE, user_type);
+                                editorUser.putString(AppConstant.KEY_IMAGE, userPic_url);
+                                editorUser.commit();
+
+                                if (business_name.equalsIgnoreCase("null") || business_name == null || business_name.equalsIgnoreCase("")) {
                                     et_businessnmae.setText("");
-                                }else
-                                {
+                                } else {
                                     et_businessnmae.setText(business_name);
                                 }
-                                if(close_time.equalsIgnoreCase("null") || close_time==null || close_time.equalsIgnoreCase(""))
-                                {
+                                if (close_time.equalsIgnoreCase("null") || close_time == null || close_time.equalsIgnoreCase("")) {
                                     et_closetime.setText("");
-                                }else
-                                {
+                                } else {
                                     et_closetime.setText(close_time);
                                 }
 
-                                if(open_time.equalsIgnoreCase("null") || open_time==null || open_time.equalsIgnoreCase(""))
-                                {
+                                if (open_time.equalsIgnoreCase("null") || open_time == null || open_time.equalsIgnoreCase("")) {
                                     et_opentime.setText("");
-                                }else
-                                {
+                                } else {
                                     et_opentime.setText(open_time);
                                 }
+
+                                ((AgentHomeActivity) getActivity())
+                                        .stateChanged();
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
                                 locationAutocompleteFragment.setText(customer_address);
+                                strAdd = customer_address;
                                 et_fullname.setText(customer_name);
-
 
 
                                 if (userPic_url == null || userPic_url.equals("") || userPic_url.equals("null")) {

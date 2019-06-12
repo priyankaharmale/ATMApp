@@ -25,6 +25,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -40,12 +48,19 @@ import com.hnweb.atmap.user.fragment.UserProfileFragment;
 import com.hnweb.atmap.user.fragment.UserTransactionHistoryFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
+import com.hnweb.atmap.utils.NotificationUpdateModel;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
 import com.hnweb.atmap.utils.SharedPrefManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 /* * Created by Priyanka H on 1/04/2019.
  */
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener, NotificationUpdateModel.OnCustomStateListener {
 
     LoadingDialog loadingDialog;
     DrawerLayout drawer;
@@ -70,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         try {
             stateChanged();
-            //getNotificationCount();
+            getNotificationCount();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -132,15 +147,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 drawer.closeDrawer(GravityCompat.START);
-               /* Fragment fragment = null;
-                fragment = new ProfileEditFragment();
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.frame_layout, fragment);
-                transaction.commit();
-
-  */
                 Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -188,7 +194,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             //drawerFragment.closeDrawer(GravityCompat.START);
         }
         if (connectionDetector.isConnectingToInternet()) {
-            //getNotificationCount();
+            getNotificationCount();
         } else {
             Toast.makeText(HomeActivity.this, "No Internet Connection, Please try Again!!", Toast.LENGTH_SHORT).show();
 
@@ -421,7 +427,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @SuppressLint("SetTextI18n")
     @Override
     public void stateChanged() {
-        //getNotificationCount();
+        getNotificationCount();
 
         user_id = prefs.getString(AppConstant.KEY_ID, null);
         profile_image = prefs.getString(AppConstant.KEY_IMAGE, null);
@@ -438,7 +444,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .dontAnimate()
                     .into(imageViewProfile);
-            //Glide.with(getApplicationContext()).load(R.drawable.user_register).into(imageViewProfile);
         } else {
             progressBar.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
@@ -463,19 +468,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         }
                     })
                     .into(imageViewProfile);
-            // Glide.with(getApplicationContext()).load(profile_image).into(imageViewProfile);
-
-
-            // Toast.makeText(this, "Notification call", Toast.LENGTH_SHORT).show();
 
         }
     }
 
 
-/*
+
     private void getNotificationCount() {
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_NOTIFICATIONCOUNT,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_GETNOTIFICATIONCOUNT,
                 new Response.Listener<String>() {
 
                     @Override
@@ -535,7 +536,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         postRequest.setShouldCache(false);
         requestQueue.add(postRequest);
     }
-*/
+
 
 
     private void setupBadge() {
@@ -556,4 +557,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    @Override
+    public void notificationStateChanged() {
+        getNotificationCount();
+    }
 }

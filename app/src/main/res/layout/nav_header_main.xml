@@ -47,7 +47,7 @@
                 android:layout_height="@dimen/dimens_50dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:visibility="gone" />
+            />
         </LinearLayout>
 
         <ImageView

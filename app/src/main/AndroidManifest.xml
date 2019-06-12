@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,8 +40,8 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
-        android:name=".atm.activity.ScannedBarcodeActivity"
-        android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".atm.activity.ScannedBarcodeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".atm.activity.RequestMoneyDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
@@ -61,6 +61,9 @@
         <activity
             android:name=".atm.activity.AgentHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".user.fragment.MapViewTestFragment"
+            />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

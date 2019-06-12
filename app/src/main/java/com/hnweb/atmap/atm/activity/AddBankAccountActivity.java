@@ -2,9 +2,13 @@ package com.hnweb.atmap.atm.activity;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.fragment.HomeFragment;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.LoadingDialog;
 import com.hnweb.atmap.utils.Validations;
@@ -42,9 +47,10 @@ public class AddBankAccountActivity extends AppCompatActivity {
     private int mYear, mMonth, mDay;
     LoadingDialog loadingDialog;
     Button btn_submit;
-    String str_dob, user_id;
+    String str_dob, user_id, callfrom,accountId;
     ImageView iv_back;
     SharedPreferences sharedPreferences;
+    String bank_name, bank_acc, router_num, ssn_num, dob;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,17 +63,70 @@ public class AddBankAccountActivity extends AppCompatActivity {
         et_businessnmae = findViewById(R.id.et_businessnmae);
         et_dob = findViewById(R.id.et_dob);
         btn_submit = findViewById(R.id.btn_submit);
-        iv_back=findViewById(R.id.iv_back);
+        iv_back = findViewById(R.id.iv_back);
         loadingDialog = new LoadingDialog(this);
 
         sharedPreferences = getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = sharedPreferences.getString(AppConstant.KEY_ID, null);
 
+        Intent intent = getIntent();
+        callfrom = intent.getStringExtra("callfrom");
+
+        if (callfrom.equalsIgnoreCase("1")) {
+
+            bank_name = intent.getStringExtra("bank_name");
+            bank_acc = intent.getStringExtra("bank_acc");
+            router_num = intent.getStringExtra("router_num");
+            ssn_num = intent.getStringExtra("ssn_num");
+            dob = intent.getStringExtra("dob");
+            accountId = intent.getStringExtra("accountId");
+
+            et_bankname.setText(bank_name);
+            et_accountNo.setText(bank_acc);
+            et_routerNo.setText(router_num);
+            if(dob.equalsIgnoreCase("") || dob.equalsIgnoreCase("null")|| dob==null)
+            {
+                et_dob.setText("");
+            }else
+            {
+                et_dob.setText(dob);
+            }
+
+
+
+            String new_word = ssn_num.substring(ssn_num.length() - 4);
+            String substring2 = ssn_num.substring(0, ssn_num.length() - 4);
+
+            Log.e("new_word", new_word);
+
+            int len = substring2.length();
+            StringBuilder sb = new StringBuilder(len);
+            for (int i = 0; i < len; i++) {
+                sb.append('*');
+            }
+            Log.e("substring", sb.toString());
+
+            String newbankaccoutn = sb.toString() + new_word;
+
+            et_ssn.setText(newbankaccoutn);
+
+            btn_submit.setText("Update");
+
+        } else {
+            btn_submit.setText("Submit");
+        }
+
+
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkValidation()) {
-                    addAccount();
+                    if (callfrom.equalsIgnoreCase("2")) {
+                        addAccount();
+                    } else {
+                        updateAccount();
+                    }
+
                 }
 
             }
@@ -131,7 +190,7 @@ public class AddBankAccountActivity extends AppCompatActivity {
                                             public void onClick(DialogInterface dialog, int id) {
 
                                                 //  getUserDetails();
-                                                onBackPressed();
+                                               finish();
 
                                             }
                                         });
@@ -231,6 +290,140 @@ public class AddBankAccountActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
+
+    private void updateAccount() {
+        loadingDialog.show();
+        StringRequest stringRequest;
+        RequestQueue queue = Volley.newRequestQueue(AddBankAccountActivity.this);
+        String url = AppConstant.API_UPDATEAGENTBANKACCOUNT;
+
+        stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String object) {
+                        System.out.println("updateprofile" + object);
+                        try {
+                            final JSONObject j = new JSONObject(object);
+                            int message_code = j.getInt("message_code");
+                            String message = j.getString("message");
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+                            if (message_code == 1) {
+                                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(AddBankAccountActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                               // onBackPressed();
+
+                                                finish();
+
+
+                                            }
+                                        });
+                                android.support.v7.app.AlertDialog alert = builder.create();
+                                alert.show();
+                            } else {
+                                message = j.getString("message");
+                                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(AddBankAccountActivity.this);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        });
+                                android.support.v7.app.AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        } catch (JSONException e) {
+                            System.out.println("jsonexeption" + e.toString());
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("VolleyError" + error.toString());
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        errorMessage = "Request timeout";
+                    } else if (error.getClass().equals(NoConnectionError.class)) {
+                        errorMessage = "Failed to connect server";
+                    }
+
+                    Toast.makeText(AddBankAccountActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+
+                    loadingDialog.dismiss();
+
+                } else {
+                    String result = new String(networkResponse.data);
+                    try {
+                        JSONObject response = new JSONObject(result);
+                        String status = response.getString("status");
+                        String message = response.getString("message");
+
+                        Log.e("Error Status", status);
+                        Log.e("Error Message", message);
+
+                        if (networkResponse.statusCode == 404) {
+                            errorMessage = "Resource not found";
+                        } else if (networkResponse.statusCode == 401) {
+                            errorMessage = message + " Please login again";
+                        } else if (networkResponse.statusCode == 400) {
+                            errorMessage = message + " Check your inputs";
+                        } else if (networkResponse.statusCode == 500) {
+                            errorMessage = message + " Something is getting wrong";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
+
+
+                Toast.makeText(AddBankAccountActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> Stringparams = new HashMap<String, String>();
+
+
+                bankname = et_bankname.getText().toString();
+                accountNo = et_accountNo.getText().toString();
+                routerNo = et_routerNo.getText().toString();
+                ssn = et_ssn.getText().toString();
+                if(ssn.contains("*"))
+                {
+                    ssn=ssn_num;
+                }
+
+                Stringparams.put("dob", et_dob.getText().toString());
+                Stringparams.put("acc_id", accountId);
+                Stringparams.put("bank_name", bankname);
+                Stringparams.put("bank_account_no", accountNo);
+                Stringparams.put("router_no", routerNo);
+                Stringparams.put("ssn_no", ssn);
+                Stringparams.put("agent_id", user_id);
+                Log.e("params", Stringparams.toString());
+
+                // System.out.println(params);
+                return Stringparams;
+            }
+        };
+        queue.add(stringRequest);
+        int MY_SOCKET_TIMEOUT_MS = 50000;
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
     private void getDOBPicker() {
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -259,5 +452,10 @@ public class AddBankAccountActivity extends AppCompatActivity {
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

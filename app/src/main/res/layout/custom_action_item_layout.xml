@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="@dimen/dimens_10dp"
     android:clipToPadding="false"
+    android:id="@+id/ll_notification"
     android:focusable="true">
 
     <ImageView

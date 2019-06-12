@@ -30,11 +30,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -43,24 +52,31 @@ import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.activity.ChooseUserActivity;
 import com.hnweb.atmap.atm.fragment.HomeFragment;
+import com.hnweb.atmap.atm.fragment.NotificationFragment;
 import com.hnweb.atmap.atm.fragment.RequestMoneyFragment;
 import com.hnweb.atmap.atm.fragment.TransactionHistoryFragment;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.atm.fragment.ProfileFragment;
 import com.hnweb.atmap.utils.ConnectionDetector;
 import com.hnweb.atmap.utils.LoadingDialog;
+import com.hnweb.atmap.utils.NotificationUpdateModel;
 import com.hnweb.atmap.utils.ProfileUpdateModel;
 import com.hnweb.atmap.utils.SharedPrefManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 /* * Created by Priyanka H on 01/04/2019.
  */
 
-public class AgentHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener {
+public class AgentHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener , NotificationUpdateModel.OnCustomStateListener {
 
     LoadingDialog loadingDialog;
     DrawerLayout drawer;
@@ -80,6 +96,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     SharedPreferences prefs;
     ProgressBar progressBar;
     TextView textCartItemCount;
+    FrameLayout  ll_notification;
     String mCartItemCount = "";
     ImageView iv_notification;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
@@ -90,7 +107,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         super.onResume();
         try {
             stateChanged();
-            //getNotificationCount();
+            getNotificationCount();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -102,7 +119,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_agenthome);
-        toolbar = ( Toolbar ) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         iv_notification = toolbar.findViewById(R.id.iv_notification);
         setSupportActionBar(toolbar);
 
@@ -118,7 +135,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         user_name = prefs.getString(AppConstant.KEY_NAME, null);
         user_email = prefs.getString(AppConstant.KEY_EMAIL, null);
 
-        drawer = ( DrawerLayout ) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -195,7 +212,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             transaction.commit();
         }
         if (connectionDetector.isConnectingToInternet()) {
-            //getNotificationCount();
+            getNotificationCount();
         } else {
             Toast.makeText(AgentHomeActivity.this, "No Internet Connection, Please try Again!!", Toast.LENGTH_SHORT).show();
 
@@ -288,7 +305,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = ( DrawerLayout ) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -325,14 +342,26 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         final MenuItem menuItem = menu.findItem(R.id.action_notification);
 
         View actionView = MenuItemCompat.getActionView(menuItem);
-        textCartItemCount = ( TextView ) actionView.findViewById(R.id.cart_badge);
+        textCartItemCount =  actionView.findViewById(R.id.cart_badge);
+        ll_notification = actionView.findViewById(R.id.ll_notification);
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onOptionsItemSelected(menuItem);
             }
         });
-
+        ll_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = null;
+                fragment = new NotificationFragment();
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.frame_layout, fragment);
+                transaction.commit();
+            }
+        });
         return true;
     }
 
@@ -385,7 +414,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).addToBackStack(null).commit();
         }
 
-        DrawerLayout drawer = ( DrawerLayout ) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -425,7 +454,6 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     }
 
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void stateChanged() {
         //getNotificationCount();
@@ -479,10 +507,9 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     }
 
 
-/*
-    private void getNotificationCount() {
+    public void getNotificationCount() {
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_NOTIFICATIONCOUNT,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_GETNOTIFICATIONCOUNT,
                 new Response.Listener<String>() {
 
                     @Override
@@ -538,11 +565,10 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             }
         };
         postRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(AgentHomeActivity.this);
         postRequest.setShouldCache(false);
         requestQueue.add(postRequest);
     }
-*/
 
 
     private void setupBadge() {
@@ -742,5 +768,10 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
                 Log.e("Exception", e.getMessage());
             }
         }
+    }
+
+    @Override
+    public void notificationStateChanged() {
+        getNotificationCount();
     }
 }

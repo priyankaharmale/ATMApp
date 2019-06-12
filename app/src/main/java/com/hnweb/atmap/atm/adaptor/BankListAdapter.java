@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -24,6 +25,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AddBankAccountActivity;
 import com.hnweb.atmap.atm.activity.RequestMoneyDetailsActivity;
 import com.hnweb.atmap.atm.bo.AgentBank;
 import com.hnweb.atmap.atm.bo.User;
@@ -53,19 +55,25 @@ public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.MyView
     LoadingDialog loadingDialog;
     SharedPreferences sharedPreferences;
     String user_id;
+
     OnCallBack onCallBack;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_bankName, tv_accNo;
         TextView tv_status;
-
+        ImageView iv_delete;
         public MyViewHolder(View view, final List<AgentBank> agentBanks, final Activity activity) {
             super(view);
+
             tv_bankName = view.findViewById(R.id.tv_bankName);
             tv_accNo = view.findViewById(R.id.tv_accNo);
             tv_status = view.findViewById(R.id.tv_status);
+            iv_delete=view.findViewById(R.id.iv_delete);
             sharedPreferences = activity.getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
             user_id = sharedPreferences.getString(AppConstant.KEY_ID, null);
+
+
+
 
 
         }
@@ -97,7 +105,14 @@ public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.MyView
         holder.tv_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                markAsDefault(agentBanks.get(position).getId().toString());
+                if(holder.tv_status.getText().toString().equalsIgnoreCase("Default"))
+                {
+                    Toast.makeText(activity, "One account should be default at a time", Toast.LENGTH_SHORT).show();
+                }else
+                {
+                    markAsDefault(agentBanks.get(position).getId().toString());
+                }
+
             }
         });
         if (agentBanks.get(position).getDefault_account().equalsIgnoreCase("1")) {
@@ -122,6 +137,26 @@ public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.MyView
         String newbankaccoutn = sb.toString() + new_word;
         Log.e("newbankaccoutn", newbankaccoutn);
         holder.tv_accNo.setText(newbankaccoutn);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, AddBankAccountActivity.class);
+                intent.putExtra("bank_name", agentBanks.get(position).getAgent_bank_name());
+                intent.putExtra("bank_acc", agentBanks.get(position).getAgent_acc_num());
+                intent.putExtra("router_num", agentBanks.get(position).getAgent_router_number());
+                intent.putExtra("ssn_num", agentBanks.get(position).getAgent_ssn());
+                intent.putExtra("dob", agentBanks.get(position).getAgent_dob());
+                intent.putExtra("accountId", agentBanks.get(position).getId());
+                intent.putExtra("callfrom", "1");
+                activity.startActivity(intent);
+            }
+        });
+        holder.iv_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete(agentBanks.get(position).getId().toString());
+            }
+        });
     }
 
 
@@ -141,6 +176,91 @@ public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.MyView
     private void markAsDefault(final String bankId) {
         loadingDialog.show();
         StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_MARKASDEFAULT,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        if (loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+
+                        Log.i("Response", "ServiceList= " + response);
+
+                        try {
+                            JSONObject j = new JSONObject(response);
+                            int message_code = j.getInt("message_code");
+                            String message = j.getString("message");
+                            if (message_code == 1) {
+
+                                loadingDialog.dismiss();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                onCallBack.refresh();
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            } else {
+                                message = j.getString("message");
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setMessage(message)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.dismiss();
+                            }
+
+
+                        } catch (JSONException e) {
+                            System.out.println("jsonexeption" + e.toString());
+                        } catch (Exception e) {
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                        VolleyLog.d("VolleyResponse", "Error: " + error.getMessage());
+                        error.printStackTrace();
+                    }
+                }
+        ) {
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                // the POST parameters:
+                params.put("agent_id", user_id);
+                params.put("bank_id", bankId);
+                Log.e("Params", params.toString());
+                return params;
+            }
+        };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        postRequest.setShouldCache(false);
+        requestQueue.add(postRequest);
+
+    }
+
+
+    private void delete(final String bankId) {
+        loadingDialog.show();
+        StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_DELETEAGENTBANKACCOUNT,
                 new Response.Listener<String>() {
 
                     @Override

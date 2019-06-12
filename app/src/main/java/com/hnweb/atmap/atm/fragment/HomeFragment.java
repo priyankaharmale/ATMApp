@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,10 +57,15 @@ public class HomeFragment extends Fragment implements OnCallBack {
     LoadingDialog loadingDialog;
     BankListAdapter bankListAdapter;
     ArrayList<AgentBank> agentBanks;
-
     SharedPreferences sharedPreferences;
     String user_id;
     OnCallBack onCallBack;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBankList();
+    }
 
     @Nullable
     @Override
@@ -74,11 +80,12 @@ public class HomeFragment extends Fragment implements OnCallBack {
         ll_addacount = view.findViewById(R.id.ll_addacount);
         sharedPreferences = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = sharedPreferences.getString(AppConstant.KEY_ID, null);
-        onCallBack=this;
+        onCallBack = this;
         ll_addacount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddBankAccountActivity.class);
+                intent.putExtra("callfrom", "2");
                 startActivity(intent);
 
             }
@@ -120,13 +127,14 @@ public class HomeFragment extends Fragment implements OnCallBack {
                                         agent.setAgent_ssn(jsonObjectpostion.getString("agent_ssn"));
                                         agent.setAgent_router_number(jsonObjectpostion.getString("agent_router_number"));
                                         agent.setStripe_acc_id(jsonObjectpostion.getString("stripe_acc_id"));
+                                        agent.setAgent_dob(jsonObjectpostion.getString("agent_dob"));
                                         agent.setDefault_account(jsonObjectpostion.getString("default_account"));
 
                                         agentBanks.add(agent);
                                     }
                                     System.out.println("jsonobk" + jsonArrayRow);
                                     System.out.println("agentArrayList size." + agentBanks.size());
-                                    bankListAdapter = new BankListAdapter(agentBanks, getActivity(),onCallBack);
+                                    bankListAdapter = new BankListAdapter(agentBanks, getActivity(), onCallBack);
                                     recyclerView.setAdapter(bankListAdapter);
 
 

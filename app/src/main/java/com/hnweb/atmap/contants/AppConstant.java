@@ -77,7 +77,7 @@ public class AppConstant {
     public static final String API_SCANBARCODE = BASE_URL + "scan_api";
 
 
-    /*=================================================update profile=========================================================*/
+    /*=================================================Add bank Detail=========================================================*/
     public static final String API_ADDBANKACCOUNT = BASE_URL + "add_bank_details";
 
 
@@ -114,6 +114,19 @@ public class AppConstant {
 
     /*=================================================ADD USER BANK ACC=========================================================*/
     public static final String API_ADDUSERBANKACC = BASE_URL + "add_card_details";
+
+
+    /*=================================================Update bank Detail=========================================================*/
+    public static final String API_UPDATEAGENTBANKACCOUNT = BASE_URL + "update_bank_details";
+
+    /*=================================================DELETE bank Detail=========================================================*/
+    public static final String API_DELETEAGENTBANKACCOUNT = BASE_URL + "delete_bank_details";
+
+    /*=================================================GET NOTIFICATION COUNT=========================================================*/
+    public static final String API_GETNOTIFICATIONCOUNT = BASE_URL + "notification_count";
+
+
+    public static final String API_NOTIFICATIONLISTINGAGENT = BASE_URL + "notification_list_agent";
 
 
     public static String dateToString(Date date, String format) {

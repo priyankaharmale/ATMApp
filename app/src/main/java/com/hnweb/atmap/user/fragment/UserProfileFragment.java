@@ -52,9 +52,11 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 import com.google.android.gms.maps.model.LatLng;
 
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
 import com.hnweb.atmap.multipartRequest.MultiPart_Key_Value_Model;
 import com.hnweb.atmap.multipartRequest.MultipartFileUploaderAsync;
 import com.hnweb.atmap.multipartRequest.OnEventListener;
+import com.hnweb.atmap.user.activity.HomeActivity;
 import com.hnweb.atmap.user.adaptor.MonthAdaptor;
 import com.hnweb.atmap.user.adaptor.YearAdaptor;
 import com.hnweb.atmap.contants.AppConstant;
@@ -98,6 +100,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
     public static final int REQUEST_CAMERA = 5;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
     SharedPreferences prefs;
+    SharedPreferences.Editor editorUser;
     EditText et_fullname, et_mobilno, et_email, et_dob;
     String fullname, mobilno, email, str_dob;
     String user_id;
@@ -129,9 +132,7 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("AOP_PREFS", MODE_PRIVATE);
         user_id = prefs.getString(AppConstant.KEY_ID, null);
-
-
-
+        editorUser = prefs.edit();
 
 
         getUserDetails();
@@ -333,8 +334,8 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
             ret = false;
         if (!Validations.isEmailAddress(et_email, true, "Please Enter Valid Email ID"))
             ret = false;
-        if (!Validations.hasText(et_dob, "Please Select Date of Birth"))
-            ret = false;
+     /*   if (!Validations.hasText(et_dob, "Please Select Date of Birth"))
+            ret = false;*/
         return ret;
     }
 
@@ -350,26 +351,20 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         }
         System.out.println("priya Op" + camImage);
 
-
         Map<String, String> Stringparams = new HashMap<String, String>();
         fullname = et_fullname.getText().toString();
         email = et_email.getText().toString();
         mobilno = et_mobilno.getText().toString();
-
-
         Stringparams.put("Accept", "application/json");
         Stringparams.put("Content-Type", "application/json");
         Stringparams.put("name", fullname);
-       // Stringparams.put("address", strAdd);
+        Stringparams.put("customer_type", "1");
         Stringparams.put("email", email);
         Stringparams.put("dob", str_dob);
-      /*  Stringparams.put("cus_lat", stringLatitude);
-        Stringparams.put("cus_long", stringLongitude);
-     */
-      Stringparams.put("mobile_no", mobilno);
-        Stringparams.put("customer_type", "1");
-
         Stringparams.put("id", user_id);
+        Stringparams.put("mobile_no", mobilno);
+
+
         Log.e("params", Stringparams.toString());
 
 
@@ -385,7 +380,6 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
             public void onSuccess(String object) {
                 loadingDialog.dismiss();
                 System.out.println("Result" + object);
-                //    Toast.makeText(getActivity(), "ress" + object, Toast.LENGTH_LONG).show();
 
                 try {
                     final JSONObject j = new JSONObject(object);
@@ -438,99 +432,6 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
 
 
 
-    /*private void updateprofile() {
-        loadingDialog.show();
-
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = AppConstant.API_UPDATE_PROFILE;
-
-        StringRequest strRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String object) {
-                        System.out.println("updateprofile" + object);
-                        try {
-                            final JSONObject j = new JSONObject(object);
-                            int message_code = j.getInt("message_code");
-                            String message = j.getString("message");
-                            if (loadingDialog.isShowing()) {
-                                loadingDialog.dismiss();
-                            }
-                            if (message_code == 1) {
-                                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                                builder.setMessage(message)
-                                        .setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-
-                                                getUserDetails();
-
-                                            }
-                                        });
-                                android.support.v7.app.AlertDialog alert = builder.create();
-                                alert.show();
-                            } else {
-                                message = j.getString("message");
-                                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                                builder.setMessage(message)
-                                        .setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                            }
-                                        });
-                                android.support.v7.app.AlertDialog alert = builder.create();
-                                alert.show();
-                            }
-                        } catch (JSONException e) {
-                            System.out.println("jsonexeption" + e.toString());
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String errorMessage = "Unknown error";
-
-                Log.i("Error", errorMessage);
-                error.printStackTrace();
-
-
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> Stringparams = new HashMap<String, String>();
-                fullname = et_fullname.getText().toString();
-                email = et_email.getText().toString();
-                mobilno = et_mobilno.getText().toString();
-
-                if (camImage == null || camImage.equalsIgnoreCase("")) {
-                } else {
-                    Stringparams.put("img", String.valueOf(camImage));
-                }
-                Stringparams.put("Accept", "application/json");
-                Stringparams.put("Content-Type", "application/json");
-                Stringparams.put("name", fullname);
-                Stringparams.put("address", strAdd);
-                Stringparams.put("email", email);
-                Stringparams.put("dob", str_dob);
-                Stringparams.put("cus_lat", stringLatitude);
-                Stringparams.put("cus_long", stringLongitude);
-                Stringparams.put("mobile_no", mobilno);
-                Stringparams.put("customer_type", "1");
-                Stringparams.put("cardnumber", et_cardNumber.getText().toString());
-                Stringparams.put("exp_month", et_expirymonth.getText().toString());
-                Stringparams.put("exp_year", et_expiryyear.getText().toString());
-                Stringparams.put("cvc", et_cvv.getText().toString());
-                Stringparams.put("id", user_id);
-                Log.e("params", Stringparams.toString());
-                // System.out.println(params);
-                return Stringparams;
-            }
-        };
-        queue.add(strRequest);
-    }*/
 
 
     private void getUserDetails() {
@@ -562,12 +463,20 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
                                 String customer_mobile = jsonObject.getString("customer_mobile");
                                 String customer_address = jsonObject.getString("customer_address");
                                 String customer_name = jsonObject.getString("customer_name");
-                              /*  String customer_bank_name = jsonObject.getString("customer_bank_name");
-                                String customer_acc_num = jsonObject.getString("customer_acc_num");
-                                String customer_ssn = jsonObject.getString("customer_ssn");
-                                String router_number = jsonObject.getString("router_number");
-                                String business_name = jsonObject.getString("business_name");
-*/
+                                String user_type = jsonObject.getString("user_type");
+
+
+                                editorUser.putString(AppConstant.KEY_ID, user_id);
+                                editorUser.putString(AppConstant.KEY_NAME, customer_name);
+                                editorUser.putString(AppConstant.KEY_EMAIL, email);
+                                editorUser.putString(AppConstant.KEY_PHONE, customer_mobile);
+                                editorUser.putString(AppConstant.KEY_USERTYPE, user_type);
+                                editorUser.putString(AppConstant.KEY_IMAGE, userPic_url);
+                                editorUser.commit();
+
+
+                                ((HomeActivity) getActivity())
+                                        .stateChanged();
 
                                 et_email.setText(email);
                                 et_mobilno.setText(customer_mobile);
@@ -655,7 +564,6 @@ public class UserProfileFragment extends Fragment implements OnCallBack, View.On
         }
         return strAdd;
     }
-
 
 
     @Override

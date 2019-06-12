@@ -2,10 +2,18 @@ package com.hnweb.atmap.atm.bo;
 
 public class AgentBank {
 
-    String id,agent_id,agent_bank_name,agent_acc_num,agent_ssn,agent_router_number,stripe_acc_id,default_account,created_at;
+    String id,agent_id,agent_bank_name,agent_acc_num,agent_ssn,agent_router_number,stripe_acc_id,default_account,created_at,agent_dob;
 
     public String getId() {
         return id;
+    }
+
+    public String getAgent_dob() {
+        return agent_dob;
+    }
+
+    public void setAgent_dob(String agent_dob) {
+        this.agent_dob = agent_dob;
     }
 
     public void setId(String id) {

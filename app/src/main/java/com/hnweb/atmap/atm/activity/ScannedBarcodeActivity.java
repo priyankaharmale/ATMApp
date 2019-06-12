@@ -360,6 +360,8 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                     params.put("barcode_id", barcode);
                     params.put("request_id", request_id);
                     params.put("id", request_user_id);
+                    System.out.println("params" + params.toString());
+
 
                 } catch (Exception e) {
                     System.out.println("error" + e.toString());

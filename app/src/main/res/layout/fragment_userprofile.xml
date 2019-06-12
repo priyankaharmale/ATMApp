@@ -137,6 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimens_5dp"
+                android:visibility="gone"
                 android:text="Date of Birth"
                 android:textSize="@dimen/text_size_16sp" />
 
@@ -146,6 +147,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:hint="Select DOB"
+                android:visibility="gone"
+
                 android:focusableInTouchMode="false"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/coloBlack"

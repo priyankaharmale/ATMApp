@@ -29,6 +29,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.inteface.OnCallBack;
 import com.hnweb.atmap.user.adaptor.ImagesAdaptor;
@@ -274,6 +275,8 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                             if (loadingDialog.isShowing()) {
                                 loadingDialog.dismiss();
                             }
+                       /*     AgentHomeActivity agentHomeActivity = new AgentHomeActivity();
+                            agentHomeActivity.getNotificationCount();*/
                             if (message_code == 1) {
 
                                 try {
@@ -290,6 +293,8 @@ public class AgentDetailsActivity extends AppCompatActivity implements OnCallBac
                                     intent.putExtra("ratings", ratings);
 
                                     startActivity(intent);
+
+
                                 } catch (JSONException e) {
                                     System.out.println("jsonexeption" + e.toString());
                                 }

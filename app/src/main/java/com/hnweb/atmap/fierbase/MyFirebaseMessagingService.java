@@ -70,9 +70,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             JSONObject jsonObject = new JSONObject(remoteMessage.getData());
 
             Log.d("JsonResponse", jsonObject.toString());
-            String type = jsonObject.getString("type");
-            String message = jsonObject.getString("msg");
-            Log.e("JsonResponse", type + " :: " + message);
+          //  String type = jsonObject.getString("type");
+            String message = jsonObject.getString("message");
+            Log.e("JsonResponse", message + " :: " + message);
             Intent resultIntent = new Intent();
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

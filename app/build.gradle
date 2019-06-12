@@ -61,12 +61,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-auth:16.2.0'
     implementation 'com.google.firebase:firebase-messaging:17.5.0'
-    /*MAP :: mike666taylor@gmail.com*/
+    /*MAP :: mike666taylor@gmail.com >> LiveBusiness Account*/
+
+    /* :: mike666taylor@gmail.com >> Gson file*/
 
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
 
     implementation  'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-places:16.0.0'
+
     implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
 

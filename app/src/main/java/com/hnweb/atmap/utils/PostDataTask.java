@@ -11,8 +11,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.hnweb.atmap.activity.MainActivity.EMAIL_KEY;
-import static com.hnweb.atmap.activity.MainActivity.FORM_DATA_TYPE;
+import static com.hnweb.atmap.MainActivity.EMAIL_KEY;
+import static com.hnweb.atmap.MainActivity.FORM_DATA_TYPE;
 
 /**
  * Created by PC-21 on 16-Apr-18.

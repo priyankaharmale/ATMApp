@@ -32,6 +32,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.AlertUtility;
 import com.hnweb.atmap.utils.AppUtils;
@@ -309,6 +310,10 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
                                 intent.putExtra("agentId", agentId);
                                 startActivity(intent);
                                 finish();
+
+                                AgentHomeActivity agentHomeActivity = new AgentHomeActivity();
+                                agentHomeActivity.getNotificationCount();
+
                               /*  AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
                                 builder.setMessage(message)
                                         .setCancelable(false)
