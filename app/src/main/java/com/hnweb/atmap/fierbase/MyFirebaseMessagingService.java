@@ -18,6 +18,8 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
+import com.hnweb.atmap.user.activity.HomeActivity;
 import com.hnweb.atmap.utils.NotificationUpdateModel;
 
 
@@ -70,7 +72,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             JSONObject jsonObject = new JSONObject(remoteMessage.getData());
 
             Log.d("JsonResponse", jsonObject.toString());
-          //  String type = jsonObject.getString("type");
+            //  String type = jsonObject.getString("type");
             String message = jsonObject.getString("message");
             Log.e("JsonResponse", message + " :: " + message);
             Intent resultIntent = new Intent();
@@ -86,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setContentIntent(resultPendingIntent);
 
-            mNotificationManager = ( NotificationManager ) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -113,7 +115,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public void showNotification(RemoteMessage remoteMessage) {
-
+        HomeActivity.getInstance().notificationStateChanged();
+        AgentHomeActivity.getInstance().notificationStateChanged();
         try {
             JSONObject jsonObject = new JSONObject(remoteMessage.getData());
 
@@ -126,21 +129,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             long[] pattern = {500, 500, 500, 500, 500, 500, 500, 500, 500};
 
-                @SuppressLint({"NewApi", "LocalSuppress"})
-                Notification noti = new Notification.Builder(getApplicationContext())
-                        .setContentTitle("ATM App")
-                        .setContentText(message)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentIntent(pIntent)
-                        .setSound(alarmSound)
-                        .setAutoCancel(false)
-                        .setVibrate(pattern)
-                        .build();
-                NotificationManager notificationManager = ( NotificationManager ) getSystemService(NOTIFICATION_SERVICE);
-                // hide the notification after its selected
-                noti.flags |= Notification.FLAG_AUTO_CANCEL;
+            @SuppressLint({"NewApi", "LocalSuppress"})
+            Notification noti = new Notification.Builder(getApplicationContext())
+                    .setContentTitle("ATM App")
+                    .setContentText(message)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentIntent(pIntent)
+                    .setSound(alarmSound)
+                    .setAutoCancel(false)
+                    .setVibrate(pattern)
+                    .build();
 
-                notificationManager.notify(0, noti);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            // hide the notification after its selected
+            noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+            notificationManager.notify(0, noti);
 
 
         } catch (JSONException e) {

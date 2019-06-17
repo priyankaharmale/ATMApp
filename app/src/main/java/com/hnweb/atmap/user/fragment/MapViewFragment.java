@@ -65,6 +65,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.user.activity.AgentDetailsActivity;
+import com.hnweb.atmap.user.activity.HomeActivity;
 import com.hnweb.atmap.user.bo.Agent;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.utils.ConnectionDetector;
@@ -144,6 +145,8 @@ public class MapViewFragment extends Fragment implements OnMarkerClickListener, 
         } else {
             LocationSet.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_REQUEST_CODE_LOCATION, getContext(), getActivity());
         }
+       /* ((HomeActivity) getActivity())
+                .notificationStateChanged();*/
         fragmentManager = getFragmentManager();
         getCurrentLocation = "0";
 

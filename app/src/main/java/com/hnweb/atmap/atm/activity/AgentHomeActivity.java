@@ -76,7 +76,7 @@ import java.util.Map;
 /* * Created by Priyanka H on 01/04/2019.
  */
 
-public class AgentHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener , NotificationUpdateModel.OnCustomStateListener {
+public class AgentHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener, NotificationUpdateModel.OnCustomNotificationStateListener {
 
     LoadingDialog loadingDialog;
     DrawerLayout drawer;
@@ -89,6 +89,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     private static final int TIME_DELAY = 2000;
     private static long back_pressed;
     public Toolbar toolbar;
+    private static AgentHomeActivity instance;
     String deviceToken = "";
     ConnectionDetector connectionDetector;
     ImageView imageViewProfile, imageViewClose, imageViewUpload;
@@ -96,7 +97,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
     SharedPreferences prefs;
     ProgressBar progressBar;
     TextView textCartItemCount;
-    FrameLayout  ll_notification;
+    FrameLayout ll_notification;
     String mCartItemCount = "";
     ImageView iv_notification;
     protected static final int REQUEST_STORAGE_ACCESS_PERMISSION = 102;
@@ -108,6 +109,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         try {
             stateChanged();
             getNotificationCount();
+            notificationStateChanged();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -123,7 +125,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         iv_notification = toolbar.findViewById(R.id.iv_notification);
         setSupportActionBar(toolbar);
 
-
+        instance=this;
         getdeviceToken();
         connectionDetector = new ConnectionDetector(AgentHomeActivity.this);
 
@@ -173,33 +175,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             }
         });
         progressBar = navHeader.findViewById(R.id.progress_bar_nav);
-       /* if (profile_image.equals("") || profile_image == null) {
-            Glide.with(getApplicationContext())
-                    .load(R.drawable.img_no_pic_navigation)
-                    .into(imageViewProfile);
-            //Glide.with(getApplicationContext()).load(R.drawable.user_register).into(imageViewProfile);
-        } else {
 
-            progressBar.setVisibility(View.VISIBLE);
-            Glide.with(getApplicationContext())
-                    .load(profile_image)
-                    .placeholder(R.drawable.img_no_pic_navigation)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(imageViewProfile);
-            // Glide.with(getApplicationContext()).load(profile_image).into(imageViewProfile);
-        }*/
 
         if (savedInstanceState == null) {
 
@@ -342,7 +318,7 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
         final MenuItem menuItem = menu.findItem(R.id.action_notification);
 
         View actionView = MenuItemCompat.getActionView(menuItem);
-        textCartItemCount =  actionView.findViewById(R.id.cart_badge);
+        textCartItemCount = actionView.findViewById(R.id.cart_badge);
         ll_notification = actionView.findViewById(R.id.ll_notification);
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,6 +331,9 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             public void onClick(View v) {
                 Fragment fragment = null;
                 fragment = new NotificationFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("callfrom", "2");
+                fragment.setArguments(bundle);
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.addToBackStack(null);
@@ -769,7 +748,9 @@ public class AgentHomeActivity extends AppCompatActivity implements NavigationVi
             }
         }
     }
-
+    public static AgentHomeActivity getInstance() {
+        return instance ;
+    }
     @Override
     public void notificationStateChanged() {
         getNotificationCount();

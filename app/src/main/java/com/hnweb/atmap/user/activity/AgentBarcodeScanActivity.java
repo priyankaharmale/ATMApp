@@ -311,9 +311,9 @@ public class AgentBarcodeScanActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
 
-                                AgentHomeActivity agentHomeActivity = new AgentHomeActivity();
+                            /*    AgentHomeActivity agentHomeActivity = new AgentHomeActivity();
                                 agentHomeActivity.getNotificationCount();
-
+*/
                               /*  AlertDialog.Builder builder = new AlertDialog.Builder(AgentBarcodeScanActivity.this);
                                 builder.setMessage(message)
                                         .setCancelable(false)

@@ -25,6 +25,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hnweb.atmap.R;
+import com.hnweb.atmap.atm.activity.AgentHomeActivity;
 import com.hnweb.atmap.atm.adaptor.RequestMoneyAdapter;
 import com.hnweb.atmap.atm.bo.User;
 import com.hnweb.atmap.contants.AppConstant;
@@ -69,6 +70,10 @@ public class RequestMoneyFragment extends Fragment {
                 if(!(getActivity()).isFinishing()) {
                     refreshHandler.postDelayed(this, 15 * 1000);
                     getRequestMoneyList();
+
+                    ((AgentHomeActivity) getActivity())
+                            .notificationStateChanged();
+
                 }
 
             }

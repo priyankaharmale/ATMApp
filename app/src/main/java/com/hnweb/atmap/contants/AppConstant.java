@@ -129,6 +129,11 @@ public class AppConstant {
     public static final String API_NOTIFICATIONLISTINGAGENT = BASE_URL + "notification_list_agent";
 
 
+    public static final String API_NOTIFICATIONLISTINGUSER= BASE_URL + "notification_list_user";
+
+    public static final String API_NOTIFICATIONMARKASREAD= BASE_URL + "update_notification_count";
+
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
         return df.format(date);

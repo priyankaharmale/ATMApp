@@ -6,7 +6,7 @@ package com.hnweb.atmap.utils;
 public class NotificationUpdateModel {
 
     private boolean mState;
-    private OnCustomStateListener mListener;
+    private OnCustomNotificationStateListener mListener;
 
     public boolean ismState() {
         return mState;
@@ -33,7 +33,7 @@ public class NotificationUpdateModel {
         }
     }
 
-    public void setListener(OnCustomStateListener listener) {
+    public void setListener(OnCustomNotificationStateListener listener) {
         mListener = listener;
     }
 
@@ -45,15 +45,15 @@ public class NotificationUpdateModel {
         mListener.notificationStateChanged();
     }
 
-    public OnCustomStateListener getmListener() {
+    public OnCustomNotificationStateListener getmListener() {
         return mListener;
     }
 
-    public void setmListener(OnCustomStateListener mListener) {
+    public void setmListener(OnCustomNotificationStateListener mListener) {
         this.mListener = mListener;
     }
 
-    public interface OnCustomStateListener {
+    public interface OnCustomNotificationStateListener {
         void notificationStateChanged();
     }
 }

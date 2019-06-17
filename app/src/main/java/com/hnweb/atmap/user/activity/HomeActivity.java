@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hnweb.atmap.R;
 import com.hnweb.atmap.activity.ChooseUserActivity;
+import com.hnweb.atmap.atm.fragment.NotificationFragment;
 import com.hnweb.atmap.contants.AppConstant;
 import com.hnweb.atmap.user.fragment.FavoriteListFragment;
 import com.hnweb.atmap.user.fragment.MapViewFragment;
@@ -60,21 +62,24 @@ import java.util.Map;
 /* * Created by Priyanka H on 1/04/2019.
  */
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener, NotificationUpdateModel.OnCustomStateListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileUpdateModel.OnCustomStateListener, NotificationUpdateModel.OnCustomNotificationStateListener {
 
     LoadingDialog loadingDialog;
     DrawerLayout drawer;
+    private static HomeActivity instance;
+
     private View navHeader;
-    public MenuItem liveitemList, liveitemMap;
     String profile_image, user_name, user_email, user_id;
     private static final int TIME_DELAY = 2000;
     private static long back_pressed;
     public Toolbar toolbar;
     String deviceToken = "";
+
     ConnectionDetector connectionDetector;
     ImageView imageViewProfile, imageViewClose, imageViewUpload;
     TextView textViewUserName, textViewAdrress;
     SharedPreferences prefs;
+    FrameLayout ll_notification;
     ProgressBar progressBar;
     TextView textCartItemCount;
     String mCartItemCount = "";
@@ -101,7 +106,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         iv_notification = toolbar.findViewById(R.id.iv_notification);
         setSupportActionBar(toolbar);
 
-
+        instance=this;
         getdeviceToken();
         connectionDetector = new ConnectionDetector(HomeActivity.this);
 
@@ -332,6 +337,28 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        ll_notification = actionView.findViewById(R.id.ll_notification);
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+        ll_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = null;
+                fragment = new NotificationFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("callfrom", "1");
+                fragment.setArguments(bundle);
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.frame_layout, fragment);
+                transaction.commit();
+            }
+        });
         return true;
     }
 
@@ -474,7 +501,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    private void getNotificationCount() {
+    public void getNotificationCount() {
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, AppConstant.API_GETNOTIFICATIONCOUNT,
                 new Response.Listener<String>() {
@@ -561,4 +588,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void notificationStateChanged() {
         getNotificationCount();
     }
+
+    public static HomeActivity getInstance() {
+        return instance;
+    }
+
 }
